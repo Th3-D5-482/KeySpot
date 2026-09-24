@@ -1,56 +1,46 @@
-# Welcome to your Expo app 👋
+# 🎹 KeySpot
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Hear it. Know the key. Play along.
 
-## Get started
+KeySpot instantly detects the musical key of any song.
 
-1. Install dependencies
+Perfect for musicians who want to quickly find a song's key and start playing without wasting time.
 
-   ```bash
-   npm install
-   ```
+## ✨ Features
 
-2. Start the app
+- 🎵 Key Detection
+- 🌙 Dark Mode
+- ⚡ Fast & Simple
+- 🚫 No Login
+- 🚫 No Account
+- 🚫 No Subscription
 
-   ```bash
-   npx expo start
-   ```
+## 📱 How It Works
 
-In the output, you'll find options to open the app in a
+1. Tap **Listen**
+2. Let KeySpot analyze the song
+3. See the detected key
+4. Start playing
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🎯 Example
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+```text
+Detected Key
 
-## Get a fresh project
+G Major
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+Confidence: 96%
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🚀 Built For
 
-### Other setup steps
+- Guitarists 🎸
+- Pianists 🎹
+- Singers 🎤
+- Bassists 🎵
+- Producers 🎧
+- Anyone who plays by ear
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+---
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Made for musicians who want to spend less time searching and more time making music.
