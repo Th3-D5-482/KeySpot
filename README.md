@@ -1,5 +1,9 @@
 # 🎹 KeySpot
 
+### 🔐 Code name: Project SnowStorm
+
+### 👤 Created by: [Th3-D5-482](https://www.github.com/Th3-D5-482)
+
 > Hear it. Know the key. Play along.
 
 KeySpot instantly detects the musical key of any song.
