@@ -1,18 +1,18 @@
 import {
-    requestRecordingPermissionsAsync,
-    useAudioStream,
+  requestRecordingPermissionsAsync,
+  useAudioStream,
 } from "expo-audio";
 
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 
 import {
-    ActivityIndicator,
-    Alert,
-    Linking,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Linking,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";

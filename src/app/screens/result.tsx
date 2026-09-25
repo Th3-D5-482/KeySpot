@@ -1,10 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import {
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
