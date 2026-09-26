@@ -123,6 +123,16 @@ type FrameAnalysis = {
   rms: number;
 };
 
+type AnalysisResult = {
+  key: string;
+  mode: "Major" | "Minor";
+  confidence: number;
+  alternative: string;
+  observedChords: string[];
+  progression: string[];
+  diatonicChords: string[];
+};
+
 // ==================================================
 // BASIC MATH
 // ==================================================
@@ -2359,535 +2369,525 @@ export default function Home() {
   // ANALYZE RECORDING
   // ==================================================
 
-  const analyzeRecording =
-    () => {
-      const buffers =
-        audioBuffers.current;
+  const analyzeRecording = (): AnalysisResult | null => {
+    const buffers =
+      audioBuffers.current;
 
-      if (
-        buffers.length === 0
-      ) {
-        throw new Error(
-          "No audio was captured."
-        );
-      }
+    if (buffers.length === 0) {
+      console.log("No audio was captured.");
+      return null;
+    }
 
-      // ----------------------------------------------
-      // Combine PCM buffers.
-      // ----------------------------------------------
+    // ----------------------------------------------
+    // Combine PCM buffers.
+    // ----------------------------------------------
 
-      let totalSamples =
-        0;
+    let totalSamples =
+      0;
 
-      for (
-        const buffer of
-        buffers
-      ) {
-        totalSamples +=
-          buffer.length;
-      }
+    for (
+      const buffer of
+      buffers
+    ) {
+      totalSamples +=
+        buffer.length;
+    }
 
-      const audio =
-        new Float32Array(
-          totalSamples
-        );
-
-      let position = 0;
-
-      for (
-        const buffer of
-        buffers
-      ) {
-        audio.set(
-          buffer,
-          position
-        );
-
-        position +=
-          buffer.length;
-      }
-
-      console.log(
-        "================================"
+    const audio =
+      new Float32Array(
+        totalSamples
       );
 
-      console.log(
-        "KEYSPOT AUDIO"
+    let position = 0;
+
+    for (
+      const buffer of
+      buffers
+    ) {
+      audio.set(
+        buffer,
+        position
       );
 
-      console.log(
-        "Sample rate:",
+      position +=
+        buffer.length;
+    }
+
+    console.log(
+      "================================"
+    );
+
+    console.log(
+      "KEYSPOT AUDIO"
+    );
+
+    console.log(
+      "Sample rate:",
+      actualSampleRate.current
+    );
+
+    console.log(
+      "Samples:",
+      audio.length
+    );
+
+    console.log(
+      "Seconds:",
+      (
+        audio.length /
         actualSampleRate.current
-      );
+      ).toFixed(2)
+    );
 
-      console.log(
-        "Samples:",
-        audio.length
-      );
+    console.log(
+      "================================"
+    );
 
-      console.log(
-        "Seconds:",
-        (
-          audio.length /
+    // ----------------------------------------------
+    // Frame analysis.
+    // ----------------------------------------------
+
+    const frames:
+      FrameAnalysis[] =
+      [];
+
+    for (
+      let start = 0;
+      start +
+      FFT_SIZE <=
+      audio.length;
+      start +=
+      HOP_SIZE
+    ) {
+      const frame =
+        audio.slice(
+          start,
+          start +
+          FFT_SIZE
+        );
+
+      const analysis =
+        analyzeFrame(
+          frame,
           actualSampleRate.current
-        ).toFixed(2)
-      );
-
-      console.log(
-        "================================"
-      );
-
-      // ----------------------------------------------
-      // Frame analysis.
-      // ----------------------------------------------
-
-      const frames:
-        FrameAnalysis[] =
-        [];
-
-      for (
-        let start = 0;
-        start +
-        FFT_SIZE <=
-        audio.length;
-        start +=
-        HOP_SIZE
-      ) {
-        const frame =
-          audio.slice(
-            start,
-            start +
-            FFT_SIZE
-          );
-
-        const analysis =
-          analyzeFrame(
-            frame,
-            actualSampleRate.current
-          );
-
-        if (
-          analysis
-        ) {
-          frames.push(
-            analysis
-          );
-        }
-      }
+        );
 
       if (
-        frames.length < 5
+        analysis
       ) {
-        throw new Error(
-          "Not enough usable musical audio was captured."
+        frames.push(
+          analysis
         );
       }
+    }
 
-      console.log(
-        "Analysis frames:",
-        frames.length
+    if (frames.length < 5) {
+      console.log("Not enough usable musical audio was captured.");
+      return null;
+    }
+
+    console.log(
+      "Analysis frames:",
+      frames.length
+    );
+
+    // ----------------------------------------------
+    // Global chroma.
+    // ----------------------------------------------
+
+    const globalChroma =
+      new Array<number>(
+        12
+      ).fill(0);
+
+    let totalFrameWeight =
+      0;
+
+    for (
+      const frame of
+      frames
+    ) {
+      const weight =
+        Math.min(
+          1.5,
+          Math.max(
+            0.25,
+            frame.rms * 30
+          )
+        );
+
+      for (
+        let i = 0;
+        i < 12;
+        i++
+      ) {
+        globalChroma[i] +=
+          frame.chroma[i] *
+          weight;
+      }
+
+      totalFrameWeight +=
+        weight;
+    }
+
+    if (
+      totalFrameWeight > 0
+    ) {
+      for (
+        let i = 0;
+        i < 12;
+        i++
+      ) {
+        globalChroma[i] /=
+          totalFrameWeight;
+      }
+    }
+
+    const normalizedGlobal =
+      normalizeVector(
+        globalChroma
       );
 
-      // ----------------------------------------------
-      // Global chroma.
-      // ----------------------------------------------
+    // ----------------------------------------------
+    // Chord windows.
+    // ----------------------------------------------
 
-      const globalChroma =
+    const frameSeconds =
+      HOP_SIZE /
+      actualSampleRate.current;
+
+    const windowFrames =
+      Math.max(
+        3,
+        Math.round(
+          CHORD_WINDOW_SECONDS /
+          frameSeconds
+        )
+      );
+
+    const hopFrames =
+      Math.max(
+        1,
+        Math.round(
+          CHORD_HOP_SECONDS /
+          frameSeconds
+        )
+      );
+
+    const windowObservations:
+      number[][] =
+      [];
+
+    for (
+      let start = 0;
+      start +
+      windowFrames <=
+      frames.length;
+      start +=
+      hopFrames
+    ) {
+      const averaged =
         new Array<number>(
           12
         ).fill(0);
 
-      let totalFrameWeight =
+      let totalWeight =
         0;
 
       for (
-        const frame of
-        frames
+        let i = start;
+        i <
+        start +
+        windowFrames;
+        i++
       ) {
+        const frame =
+          frames[i];
+
         const weight =
           Math.min(
             1.5,
             Math.max(
-              0.25,
+              0.30,
               frame.rms * 30
             )
           );
-
-        for (
-          let i = 0;
-          i < 12;
-          i++
-        ) {
-          globalChroma[i] +=
-            frame.chroma[i] *
-            weight;
-        }
-
-        totalFrameWeight +=
-          weight;
-      }
-
-      if (
-        totalFrameWeight > 0
-      ) {
-        for (
-          let i = 0;
-          i < 12;
-          i++
-        ) {
-          globalChroma[i] /=
-            totalFrameWeight;
-        }
-      }
-
-      const normalizedGlobal =
-        normalizeVector(
-          globalChroma
-        );
-
-      // ----------------------------------------------
-      // Chord windows.
-      // ----------------------------------------------
-
-      const frameSeconds =
-        HOP_SIZE /
-        actualSampleRate.current;
-
-      const windowFrames =
-        Math.max(
-          3,
-          Math.round(
-            CHORD_WINDOW_SECONDS /
-            frameSeconds
-          )
-        );
-
-      const hopFrames =
-        Math.max(
-          1,
-          Math.round(
-            CHORD_HOP_SECONDS /
-            frameSeconds
-          )
-        );
-
-      const windowObservations:
-        number[][] =
-        [];
-
-      for (
-        let start = 0;
-        start +
-        windowFrames <=
-        frames.length;
-        start +=
-        hopFrames
-      ) {
-        const averaged =
-          new Array<number>(
-            12
-          ).fill(0);
-
-        let totalWeight =
-          0;
-
-        for (
-          let i = start;
-          i <
-          start +
-          windowFrames;
-          i++
-        ) {
-          const frame =
-            frames[i];
-
-          const weight =
-            Math.min(
-              1.5,
-              Math.max(
-                0.30,
-                frame.rms * 30
-              )
-            );
-
-          for (
-            let note = 0;
-            note < 12;
-            note++
-          ) {
-            averaged[note] +=
-              frame.chroma[note] *
-              weight;
-          }
-
-          totalWeight +=
-            weight;
-        }
-
-        if (
-          totalWeight <= 0
-        ) {
-          continue;
-        }
 
         for (
           let note = 0;
           note < 12;
           note++
         ) {
-          averaged[note] /=
-            totalWeight;
+          averaged[note] +=
+            frame.chroma[note] *
+            weight;
         }
 
-        windowObservations.push(
-          normalizeVector(
-            averaged
-          )
-        );
+        totalWeight +=
+          weight;
       }
-
-      console.log(
-        "Chord observations:",
-        windowObservations.length
-      );
-
-      // ----------------------------------------------
-      // Temporal chord tracking.
-      // ----------------------------------------------
-
-      const sequence =
-        trackChordSequence(
-          windowObservations
-        );
 
       if (
-        sequence.length === 0
+        totalWeight <= 0
       ) {
-        throw new Error(
-          "KeySpot could not identify any chords."
-        );
+        continue;
       }
 
-      const chordDuration =
-        windowObservations.length >
-          1
-          ? (
-            CHORD_HOP_SECONDS
-          )
-          : CHORD_WINDOW_SECONDS;
+      for (
+        let note = 0;
+        note < 12;
+        note++
+      ) {
+        averaged[note] /=
+          totalWeight;
+      }
 
-      let progression =
-        mergeChordSequence(
-          sequence,
-          chordDuration
-        );
+      windowObservations.push(
+        normalizeVector(
+          averaged
+        )
+      );
+    }
 
-      // Remove tiny accidental fragments.
-      //
-      // A real chord should normally survive
-      // more than a single 250 ms window.
-      //
-      // However, preserve fast changes by merging
-      // very short fragments into their neighbour
-      // instead of simply deleting them.
+    console.log(
+      "Chord observations:",
+      windowObservations.length
+    );
 
-      progression =
-        progression.filter(
-          (
-            chord,
-            index
-          ) => {
-            if (
-              chord.duration >=
-              0.30
-            ) {
-              return true;
-            }
+    // ----------------------------------------------
+    // Temporal chord tracking.
+    // ----------------------------------------------
 
-            const previous =
-              progression[
-              index - 1
-              ];
-
-            const next =
-              progression[
-              index + 1
-              ];
-
-            if (
-              previous &&
-              previous.root ===
-              chord.root &&
-              previous.quality ===
-              chord.quality
-            ) {
-              return false;
-            }
-
-            if (
-              next &&
-              next.root ===
-              chord.root &&
-              next.quality ===
-              chord.quality
-            ) {
-              return false;
-            }
-
-            // Keep genuine short chord changes.
-
-            return true;
-          }
-        );
-
-      console.log(
-        "================================"
+    const sequence =
+      trackChordSequence(
+        windowObservations
       );
 
-      console.log(
-        "CHORD SEQUENCE"
+    if (sequence.length === 0) {
+      console.log("No chords could be identified.");
+      return null;
+    }
+
+    const chordDuration =
+      windowObservations.length >
+        1
+        ? (
+          CHORD_HOP_SECONDS
+        )
+        : CHORD_WINDOW_SECONDS;
+
+    let progression =
+      mergeChordSequence(
+        sequence,
+        chordDuration
       );
 
-      progression.forEach(
+    // Remove tiny accidental fragments.
+    //
+    // A real chord should normally survive
+    // more than a single 250 ms window.
+    //
+    // However, preserve fast changes by merging
+    // very short fragments into their neighbour
+    // instead of simply deleting them.
+
+    progression =
+      progression.filter(
         (
           chord,
           index
         ) => {
-          console.log(
-            index + 1,
-            chord.label,
-            chord.duration.toFixed(
-              2
-            ),
-            "sec"
-          );
+          if (
+            chord.duration >=
+            0.30
+          ) {
+            return true;
+          }
+
+          const previous =
+            progression[
+            index - 1
+            ];
+
+          const next =
+            progression[
+            index + 1
+            ];
+
+          if (
+            previous &&
+            previous.root ===
+            chord.root &&
+            previous.quality ===
+            chord.quality
+          ) {
+            return false;
+          }
+
+          if (
+            next &&
+            next.root ===
+            chord.root &&
+            next.quality ===
+            chord.quality
+          ) {
+            return false;
+          }
+
+          // Keep genuine short chord changes.
+
+          return true;
         }
       );
 
-      console.log(
-        "================================"
+    console.log(
+      "================================"
+    );
+
+    console.log(
+      "CHORD SEQUENCE"
+    );
+
+    progression.forEach(
+      (
+        chord,
+        index
+      ) => {
+        console.log(
+          index + 1,
+          chord.label,
+          chord.duration.toFixed(
+            2
+          ),
+          "sec"
+        );
+      }
+    );
+
+    console.log(
+      "================================"
+    );
+
+    // ----------------------------------------------
+    // Score each progression chord with its
+    // local chord evidence.
+    // ----------------------------------------------
+
+    progression =
+      progression.map(
+        chord => ({
+          ...chord,
+
+          score:
+            0.75,
+        })
       );
 
-      // ----------------------------------------------
-      // Score each progression chord with its
-      // local chord evidence.
-      // ----------------------------------------------
+    // ----------------------------------------------
+    // Key decision.
+    // ----------------------------------------------
 
-      progression =
-        progression.map(
-          chord => ({
-            ...chord,
-
-            score:
-              0.75,
-          })
-        );
-
-      // ----------------------------------------------
-      // Key decision.
-      // ----------------------------------------------
-
-      const result =
-        detectKey(
-          progression,
-          normalizedGlobal
-        );
-
-      const keyIndex =
-        NOTE_NAMES.indexOf(
-          result.key
-        );
-
-      const diatonicChords =
-        getDiatonicChords(
-          keyIndex,
-          result.mode
-        );
-
-      const observedChords =
-        Array.from(
-          new Set(
-            progression.map(
-              chord =>
-                chord.label
-            )
-          )
-        );
-
-      console.log(
-        "================================"
+    const result =
+      detectKey(
+        progression,
+        normalizedGlobal
       );
 
-      console.log(
-        "FINAL KEY:",
-        result.key,
+    const keyIndex =
+      NOTE_NAMES.indexOf(
+        result.key
+      );
+
+    const diatonicChords =
+      getDiatonicChords(
+        keyIndex,
         result.mode
       );
 
-      console.log(
-        "CONFIDENCE:",
-        result.confidence.toFixed(
-          1
-        ) + "%"
-      );
-
-      console.log(
-        "ALTERNATIVE:",
-        result.alternative.key,
-        result.alternative.mode
-      );
-
-      console.log(
-        "CHORDS:",
-        observedChords.join(
-          " → "
-        )
-      );
-
-      console.log(
-        "EXPECTED:",
-        diatonicChords.map(
-          chord =>
-            chord.degree +
-            "=" +
-            chord.label
-        ).join(
-          " | "
-        )
-      );
-
-      console.log(
-        "================================"
-      );
-
-      return {
-        key:
-          result.key,
-
-        mode:
-          result.mode,
-
-        confidence:
-          result.confidence,
-
-        alternative:
-          `${result.alternative.key} ${result.alternative.mode}`,
-
-        observedChords,
-
-        progression:
+    const observedChords =
+      Array.from(
+        new Set(
           progression.map(
             chord =>
               chord.label
-          ),
+          )
+        )
+      );
 
-        diatonicChords:
-          diatonicChords.map(
-            chord =>
-              `${chord.degree}:${chord.label}`
-          ),
-      };
+    console.log(
+      "================================"
+    );
+
+    console.log(
+      "FINAL KEY:",
+      result.key,
+      result.mode
+    );
+
+    console.log(
+      "CONFIDENCE:",
+      result.confidence.toFixed(
+        1
+      ) + "%"
+    );
+
+    console.log(
+      "ALTERNATIVE:",
+      result.alternative.key,
+      result.alternative.mode
+    );
+
+    console.log(
+      "CHORDS:",
+      observedChords.join(
+        " → "
+      )
+    );
+
+    console.log(
+      "EXPECTED:",
+      diatonicChords.map(
+        chord =>
+          chord.degree +
+          "=" +
+          chord.label
+      ).join(
+        " | "
+      )
+    );
+
+    console.log(
+      "================================"
+    );
+
+    return {
+      key:
+        result.key,
+
+      mode:
+        result.mode,
+
+      confidence:
+        result.confidence,
+
+      alternative:
+        `${result.alternative.key} ${result.alternative.mode}`,
+
+      observedChords,
+
+      progression:
+        progression.map(
+          chord =>
+            chord.label
+        ),
+
+      diatonicChords:
+        diatonicChords.map(
+          chord =>
+            `${chord.degree}:${chord.label}`
+        ),
     };
+  };
 
   // ==================================================
   // START LISTENING
@@ -2944,42 +2944,27 @@ export default function Home() {
                   false
                 );
 
-                const result =
-                  analyzeRecording();
+                const result = analyzeRecording();
+
+                if (!result) {
+                  Alert.alert(
+                    "No Music Detected",
+                    "KeySpot couldn't hear enough music to identify the key. Please play a song or chord progression and try again."
+                  );
+
+                  return;
+                }
 
                 router.push({
-                  pathname:
-                    "./result",
-
+                  pathname: "./result",
                   params: {
-                    key:
-                      result.key,
-
-                    mode:
-                      result.mode,
-
-                    confidence:
-                      result.confidence.toFixed(
-                        1
-                      ),
-
-                    alternative:
-                      result.alternative,
-
-                    chords:
-                      result.observedChords.join(
-                        ","
-                      ),
-
-                    progression:
-                      result.progression.join(
-                        "|"
-                      ),
-
-                    diatonic:
-                      result.diatonicChords.join(
-                        ","
-                      ),
+                    key: result.key,
+                    mode: result.mode,
+                    confidence: result.confidence.toFixed(1),
+                    alternative: result.alternative,
+                    chords: result.observedChords.join(","),
+                    progression: result.progression.join("|"),
+                    diatonic: result.diatonicChords.join(","),
                   },
                 });
               } catch (error) {
@@ -3028,117 +3013,117 @@ export default function Home() {
       }
     };
 
-  // ==================================================
-  // PERMISSION
-  // ==================================================
+// ==================================================
+// PERMISSION
+// ==================================================
 
-  const askForMicrophonePermission =
-    async () => {
-      try {
-        const permission =
-          await requestRecordingPermissionsAsync();
+const askForMicrophonePermission =
+  async () => {
+    try {
+      const permission =
+        await requestRecordingPermissionsAsync();
 
-        if (
-          permission.granted
-        ) {
-          await handleListen();
+      if (
+        permission.granted
+      ) {
+        await handleListen();
 
-          return;
-        }
-
-        Alert.alert(
-          "Microphone Permission Required",
-
-          "KeySpot needs microphone access to listen to music. Please allow microphone access in your phone settings.",
-
-          [
-            {
-              text:
-                "Cancel",
-
-              style:
-                "cancel",
-            },
-
-            {
-              text:
-                "Open Settings",
-
-              onPress:
-                () =>
-                  Linking.openSettings(),
-            },
-          ]
-        );
-      } catch (error) {
-        console.error(
-          "Permission error:",
-          error
-        );
-
-        Alert.alert(
-          "Permission Error",
-          "KeySpot could not request microphone permission."
-        );
+        return;
       }
-    };
 
-  // ==================================================
-  // UI
-  // ==================================================
+      Alert.alert(
+        "Microphone Permission Required",
 
-  return (
-    <SafeAreaProvider>
-      <View
-        className="flex-1 bg-black px-5 py-5"
-      >
-        <View className="pt-8">
-          <Text
-            className="text-white text-3xl font-bold tracking-tight"
-          >
-            KeySpot
-          </Text>
+        "KeySpot needs microphone access to listen to music. Please allow microphone access in your phone settings.",
 
-          <Text
-            className="text-gray-500 text-sm font-medium mt-1 tracking-wide"
-          >
-            MUSIC KEY DETECTOR
-          </Text>
-        </View>
+        [
+          {
+            text:
+              "Cancel",
 
-        <View
-          className="flex-1 justify-center"
+            style:
+              "cancel",
+          },
+
+          {
+            text:
+              "Open Settings",
+
+            onPress:
+              () =>
+                Linking.openSettings(),
+          },
+        ]
+      );
+    } catch (error) {
+      console.error(
+        "Permission error:",
+        error
+      );
+
+      Alert.alert(
+        "Permission Error",
+        "KeySpot could not request microphone permission."
+      );
+    }
+  };
+
+// ==================================================
+// UI
+// ==================================================
+
+return (
+  <SafeAreaProvider>
+    <View
+      className="flex-1 bg-black px-5 py-5"
+    >
+      <View className="pt-8">
+        <Text
+          className="text-white text-3xl font-bold tracking-tight"
         >
-          <View
-            className="w-full rounded-[32px] border border-gray-800 bg-[#080808] px-6 py-10 items-center"
+          KeySpot
+        </Text>
+
+        <Text
+          className="text-gray-500 text-sm font-medium mt-1 tracking-wide"
+        >
+          MUSIC KEY DETECTOR
+        </Text>
+      </View>
+
+      <View
+        className="flex-1 justify-center"
+      >
+        <View
+          className="w-full rounded-[32px] border border-gray-800 bg-[#080808] px-6 py-10 items-center"
+        >
+          <Text
+            className="text-white text-4xl font-bold text-center"
           >
-            <Text
-              className="text-white text-4xl font-bold text-center"
-            >
-              Hear it.
-            </Text>
+            Hear it.
+          </Text>
 
-            <Text
-              className="text-gray-500 text-xl text-center mt-2"
-            >
-              Know the key.
-            </Text>
+          <Text
+            className="text-gray-500 text-xl text-center mt-2"
+          >
+            Know the key.
+          </Text>
 
-            <Text
-              className="text-gray-500 text-xl text-center"
-            >
-              Play along.
-            </Text>
+          <Text
+            className="text-gray-500 text-xl text-center"
+          >
+            Play along.
+          </Text>
 
-            <TouchableOpacity
-              activeOpacity={0.85}
-              disabled={
-                isListening
-              }
-              onPress={async () => {
-                await askForMicrophonePermission();
-              }}
-              className={`
+          <TouchableOpacity
+            activeOpacity={0.85}
+            disabled={
+              isListening
+            }
+            onPress={async () => {
+              await askForMicrophonePermission();
+            }}
+            className={`
                 w-56
                 h-56
                 rounded-full
@@ -3146,95 +3131,95 @@ export default function Home() {
                 justify-center
                 items-center
                 ${isListening
-                  ? "bg-[#111111] border-2 border-gray-700"
-                  : "bg-white"
-                }
+                ? "bg-[#111111] border-2 border-gray-700"
+                : "bg-white"
+              }
               `}
-            >
-              {isListening ? (
-                <>
-                  <ActivityIndicator
-                    size="large"
-                    color="white"
-                  />
-
-                  <Text
-                    className="text-white text-lg font-semibold mt-4"
-                  >
-                    Listening
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <Text
-                    className="text-black text-2xl font-bold text-center"
-                  >
-                    Tap to
-                  </Text>
-
-                  <Text
-                    className="text-black text-2xl font-bold text-center"
-                  >
-                    Listen
-                  </Text>
-                </>
-              )}
-            </TouchableOpacity>
-
+          >
             {isListening ? (
+              <>
+                <ActivityIndicator
+                  size="large"
+                  color="white"
+                />
+
+                <Text
+                  className="text-white text-lg font-semibold mt-4"
+                >
+                  Listening
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text
+                  className="text-black text-2xl font-bold text-center"
+                >
+                  Tap to
+                </Text>
+
+                <Text
+                  className="text-black text-2xl font-bold text-center"
+                >
+                  Listen
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          {isListening ? (
+            <View
+              className="items-center mt-10"
+            >
               <View
-                className="items-center mt-10"
+                className="flex-row items-center"
               >
                 <View
-                  className="flex-row items-center"
-                >
-                  <View
-                    className="w-2.5 h-2.5 rounded-full bg-[#05ce40] mr-2"
-                  />
-
-                  <Text
-                    className="text-[#05ce40] text-base font-semibold"
-                  >
-                    Listening for chord changes...
-                  </Text>
-                </View>
+                  className="w-2.5 h-2.5 rounded-full bg-[#05ce40] mr-2"
+                />
 
                 <Text
-                  className="text-gray-600 text-sm mt-2 text-center"
+                  className="text-[#05ce40] text-base font-semibold"
                 >
-                  Keep playing through the progression
+                  Listening for chord changes...
                 </Text>
               </View>
-            ) : (
-              <View
-                className="items-center mt-10"
+
+              <Text
+                className="text-gray-600 text-sm mt-2 text-center"
               >
-                <Text
-                  className="text-gray-500 text-base text-center"
-                >
-                  Play a song and tap the button
-                </Text>
+                Keep playing through the progression
+              </Text>
+            </View>
+          ) : (
+            <View
+              className="items-center mt-10"
+            >
+              <Text
+                className="text-gray-500 text-base text-center"
+              >
+                Play a song and tap the button
+              </Text>
 
-                <Text
-                  className="text-gray-600 text-sm text-center mt-2"
-                >
-                  KeySpot will analyze the full chord progression
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-
-        <View
-          className="items-center pb-8"
-        >
-          <Text
-            className="text-gray-700 text-xs font-medium tracking-widest"
-          >
-            HEAR • KNOW • PLAY
-          </Text>
+              <Text
+                className="text-gray-600 text-sm text-center mt-2"
+              >
+                KeySpot will analyze the full chord progression
+              </Text>
+            </View>
+          )}
         </View>
       </View>
-    </SafeAreaProvider>
-  );
+
+      <View
+        className="items-center pb-8"
+      >
+        <Text
+          className="text-gray-700 text-xs font-medium tracking-widest"
+        >
+          HEAR • KNOW • PLAY
+        </Text>
+      </View>
+    </View>
+  </SafeAreaProvider>
+);
 }
