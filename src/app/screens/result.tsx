@@ -126,7 +126,7 @@ export default function Result() {
                     key={`${item.degree}-${item.chord}-${index}`}
                     className="bg-[#111111] border border-gray-800 rounded-2xl px-4 py-3 mr-2 mb-2"
                   >
-                    <Text className="text-gray-500 text-xs">
+                    <Text className="text-gray-500 text-xs text-center">
                       {item.degree}
                     </Text>
 

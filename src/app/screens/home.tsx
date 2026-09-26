@@ -2802,7 +2802,7 @@ export default function Home() {
       getDiatonicChords(
         keyIndex,
         result.mode
-      );
+      ).slice(0,6);
 
     const observedChords =
       Array.from(
