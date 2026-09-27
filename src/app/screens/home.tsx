@@ -21,7 +21,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 // SETTINGS
 // ==================================================
 
-const LISTENING_TIME = 30000;
+const LISTENING_TIME = 10000;
 
 const REQUESTED_SAMPLE_RATE = 44100;
 
