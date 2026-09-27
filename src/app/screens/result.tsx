@@ -95,7 +95,7 @@ export default function Result() {
               {detectedMode}
             </Text>
 
-            <Text className="text-gray-600 w-full text-sm mt-4 text-center">
+            <Text className="text-[#00E676] w-full text-sm mt-4 text-center">
               Analysis confidence
             </Text>
 
