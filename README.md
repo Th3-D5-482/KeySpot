@@ -40,7 +40,6 @@ KeySpot can also show the diatonic chords for the original and target keys side 
 | IV | D | F |
 | V | E | G |
 | vi | F♯m | Am |
-| vii° | G♯dim | Bdim |
 
 Use the semitone change to transpose a keyboard, or use the target key to find a guitar capo position that lets you play familiar chord shapes in the song's key.
 
