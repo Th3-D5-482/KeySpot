@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 
+import { toResultParams, useListenAndDetect } from "@/components/features/detection";
 import { ListenPanel } from "@/components/home/ListenPanel";
 import { Screen } from "@/components/Screen";
-import { toResultParams, useListenAndDetect } from "@/features/detection";
 
 export default function Home() {
   const router = useRouter();

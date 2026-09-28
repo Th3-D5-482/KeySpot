@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import { parseResultParams } from "@/components/features/detection";
 import { ResultContent } from "@/components/result/ResultContent";
 import { Screen } from "@/components/Screen";
-import { parseResultParams } from "@/features/detection";
 
 export default function Result() {
   const router = useRouter();
