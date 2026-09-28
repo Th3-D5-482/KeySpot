@@ -3075,12 +3075,7 @@ const askForMicrophonePermission =
 return (
   <SafeAreaProvider>
     <View
-      style={{
-        flex: 1,
-        backgroundColor: "black",
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-      }}
+      className="flex-1 bg-black px-5 py-5"
     >
       <View className="pt-8">
         <Text

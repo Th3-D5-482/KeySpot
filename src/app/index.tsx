@@ -8,7 +8,7 @@ export default function index() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/screens/home");
+      router.replace("/(tabs)/home");
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -23,7 +23,7 @@ export default function index() {
 
           <View className="w-64 h-64 items-center justify-center">
             <Image
-              source={require("../../assets/images/KeySpot/designer.png")}
+              source={require("../../assets/images/KeySpot/others/designer.png")}
               className="w-56 h-56"
               resizeMode="contain"
             />

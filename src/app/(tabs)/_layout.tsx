@@ -1,5 +1,6 @@
-import { Ionicons } from '@expo/vector-icons'
-import { Tabs } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { Image } from 'react-native';
 
 export default function _layout() {
     return (
@@ -21,20 +22,25 @@ export default function _layout() {
             tabBarItemStyle: {
                 borderRadius: 16,
             },
-
         }}>
             <Tabs.Screen
                 name='home'
                 options={{
                     title: 'Home',
                     tabBarIcon: ({ color, size, focused }) => (
-                        <Ionicons name={focused ? 'home' : 'home-outline'}
-                            size={size} color={color} />
+                        <Image source={
+                            focused ?
+                                require('../../../assets/images/KeySpot/icons/home_filled.png') :
+                                require('../../../assets/images/KeySpot/icons/home_outlined.png')}
+                            style={{
+                                width: 20,
+                                height: 25,
+                            }} />
                     ),
                 }}
             />
             <Tabs.Screen
-                name='result'
+                name='transpose'
                 options={{
                     title: 'Transpose',
                     tabBarIcon: ({ color, size, focused }) => (
