@@ -1,6 +1,12 @@
 import { Stack } from "expo-router";
-require('../../global.css');
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import "../../global.css";
 
 export default function RootLayout() {
-  return <Stack screenOptions={{headerShown: false}}/>;
+  return (
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </SafeAreaProvider>
+  );
 }

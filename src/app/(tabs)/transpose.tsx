@@ -1,14 +1,10 @@
-import { Text, View } from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { TransposePlaceholder } from "@/components/transpose/TransposePlaceholder";
+import { Screen } from "@/components/Screen";
 
-export default function transpose() {
+export default function Transpose() {
   return (
-    <SafeAreaProvider>
-      <View className='flex-1 py-5 bg-black items-center justify-center'>
-        <Text className='text-white text-3xl font-bold'>
-          Work in Progress!
-        </Text>
-      </View>
-    </SafeAreaProvider>
-  )
+    <Screen>
+      <TransposePlaceholder />
+    </Screen>
+  );
 }
