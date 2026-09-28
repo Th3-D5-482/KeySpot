@@ -178,7 +178,7 @@ export default function Result() {
             className="w-full bg-white rounded-2xl mt-12 py-5 items-center justify-center"
             onPress={() => {
               router.replace(
-                "/screens/home"
+                "/(tabs)/home"
               );
             }}
           >

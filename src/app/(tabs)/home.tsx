@@ -2956,7 +2956,7 @@ export default function Home() {
                 }
 
                 router.push({
-                  pathname: "./result",
+                  pathname: "/screens/result",
                   params: {
                     key: result.key,
                     mode: result.mode,
