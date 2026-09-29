@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Animated,
   Text,
   TouchableOpacity,
   View,
@@ -10,9 +11,11 @@ type ListenPanelProps = {
   isListening: boolean;
   onListen: () => void;
   onTranspose: () => void;
+  firstPulse: Animated.Value,
+  secondPulse: Animated.Value,
 };
 
-export const ListenPanel = ({ isListening, onListen, onTranspose }: ListenPanelProps) => {
+export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse,secondPulse }: ListenPanelProps) => {
   return (
     <View className="flex-1 bg-black px-5 py-5">
 
@@ -44,43 +47,85 @@ export const ListenPanel = ({ isListening, onListen, onTranspose }: ListenPanelP
           </Text>
 
           {/* Listen Button */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            disabled={isListening}
-            onPress={onListen}
-            className={`
-              w-56
-              h-56
-              rounded-full
-              mt-11
-              justify-center
-              items-center
-              ${isListening
-                ? "bg-[#111111] border-2 border-gray-700"
-                : "bg-white"
-              }
-            `}
-          >
-            {isListening ? (
+          <View className="w-56 h-56 mt-11 items-center justify-center">
+            {isListening && (
               <>
-                <ActivityIndicator size="large" color="white" />
-
-                <Text className="text-white text-lg font-semibold mt-4">
-                  Listening
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text className="text-black text-2xl font-bold text-center">
-                  Tap to
-                </Text>
-
-                <Text className="text-black text-2xl font-bold text-center">
-                  Listen
-                </Text>
+                <Animated.View
+                  pointerEvents="none"
+                  className="absolute inset-0 rounded-full border-2 border-[#05ce40]"
+                  style={{
+                    opacity: firstPulse.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.45, 0],
+                    }),
+                    transform: [
+                      {
+                        scale: firstPulse.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.55],
+                        }),
+                      },
+                    ],
+                  }}
+                />
+                <Animated.View
+                  pointerEvents="none"
+                  className="absolute inset-0 rounded-full border-2 border-[#05ce40]"
+                  style={{
+                    opacity: secondPulse.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.45, 0],
+                    }),
+                    transform: [
+                      {
+                        scale: secondPulse.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.55],
+                        }),
+                      },
+                    ],
+                  }}
+                />
               </>
             )}
-          </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.85}
+              disabled={isListening}
+              onPress={onListen}
+              className={`
+                w-full
+                h-full
+                rounded-full
+                justify-center
+                items-center
+                ${isListening
+                  ? "bg-[#111111] border-2 border-gray-700"
+                  : "bg-white"
+                }
+              `}
+            >
+              {isListening ? (
+                <>
+                  <ActivityIndicator size="large" color="white" />
+
+                  <Text className="text-white text-lg font-semibold mt-4">
+                    Listening
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="text-black text-2xl font-bold text-center">
+                    Tap to
+                  </Text>
+
+                  <Text className="text-black text-2xl font-bold text-center">
+                    Listen
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
 
           {/* Status */}
           {isListening ? (
@@ -116,7 +161,7 @@ export const ListenPanel = ({ isListening, onListen, onTranspose }: ListenPanelP
       </View>
 
       {/* Transpose */}
-      <TransposeButton onTranspose={onTranspose}/>
+      <TransposeButton onTranspose={onTranspose} />
 
       {/* Footer */}
       <View className="items-center pb-5 mt-7">
