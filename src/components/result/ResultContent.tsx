@@ -1,4 +1,5 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { TransposeButton } from "../TransposeButton";
 
 type DiatonicChord = {
   degree: string;
@@ -12,6 +13,7 @@ type ResultContentProps = {
   diatonicChords: DiatonicChord[];
   detectedChords: string[];
   onDetectAnother: () => void;
+  onTranpose: () => void;
 };
 
 export const ResultContent = ({
@@ -21,53 +23,71 @@ export const ResultContent = ({
   diatonicChords,
   detectedChords,
   onDetectAnother,
+  onTranpose,
 }: ResultContentProps) => {
   return (
     <View className="flex-1 bg-black px-5">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: 50,
-          paddingBottom: 40,
+          paddingTop: 42,
+          paddingBottom: 36,
         }}
       >
-        <Text className="text-gray-500 text-sm font-semibold tracking-widest">
+        {/* Header */}
+        <Text className="text-gray-500 text-xs font-semibold tracking-[2px]">
           KEYSPOT RESULT
         </Text>
 
-        <Text className="text-white text-4xl font-bold mt-3">Detected Key</Text>
+        <Text className="text-white text-3xl font-bold mt-2">
+          Detected Key
+        </Text>
 
-        <View className="w-full rounded-[32px] border border-gray-800 bg-[#080808] items-center py-12 mt-8">
-          <Text className="text-white text-7xl font-bold">{detectedKey}</Text>
-          <Text className="text-gray-400 text-2xl font-medium mt-3">
+        {/* Detected Key Card */}
+        <View className="w-full rounded-[30px] border border-gray-800 bg-[#080808] items-center py-10 mt-7">
+          <Text className="text-white text-7xl font-bold">
+            {detectedKey}
+          </Text>
+
+          <Text className="text-gray-400 text-xl font-medium mt-2">
             {detectedMode}
           </Text>
-          <Text className="text-[#00E676] w-full text-sm mt-4 text-center">
+
+          <Text className="text-[#00E676] text-xs font-medium mt-5">
             Analysis confidence
           </Text>
+
           <Text className="text-white text-lg font-semibold mt-1">
             {confidenceValue}%
           </Text>
         </View>
 
-        <View className="mt-10">
-          <Text className="text-white text-2xl font-bold">
+        {/* Transpose */}
+        <View className="mt-6">
+          <TransposeButton onTranspose={onTranpose} />
+        </View>
+
+        {/* Chords in this key */}
+        <View className="mt-9">
+          <Text className="text-white text-xl font-bold">
             Chords in this key
           </Text>
-          <Text className="text-gray-500 text-sm mt-2">
+
+          <Text className="text-gray-500 text-sm leading-5 mt-2">
             The diatonic chord family KeySpot used as part of the analysis.
           </Text>
 
-          <View className="flex-row flex-wrap mt-5">
+          <View className="flex-row flex-wrap mt-4">
             {diatonicChords.map((item, index) => (
               <View
                 key={`${item.degree}-${item.chord}-${index}`}
                 className="bg-[#111111] border border-gray-800 rounded-2xl px-4 py-3 mr-2 mb-2"
               >
-                <Text className="text-gray-500 text-xs text-center">
+                <Text className="text-gray-500 text-[11px] text-center">
                   {item.degree}
                 </Text>
-                <Text className="text-white text-lg font-bold mt-1">
+
+                <Text className="text-white text-base font-bold mt-1">
                   {item.chord}
                 </Text>
               </View>
@@ -75,30 +95,37 @@ export const ResultContent = ({
           </View>
         </View>
 
-        <View className="mt-10">
-          <Text className="text-white text-2xl font-bold">Chords heard</Text>
-          <Text className="text-gray-500 text-sm mt-2">
+        {/* Chords Heard */}
+        <View className="mt-9">
+          <Text className="text-white text-xl font-bold">
+            Chords heard
+          </Text>
+
+          <Text className="text-gray-500 text-sm leading-5 mt-2">
             The strongest chord patterns found throughout the recording.
           </Text>
 
-          <View className="flex-row flex-wrap mt-5">
+          <View className="flex-row flex-wrap mt-4">
             {detectedChords.map((chord, index) => (
               <View
                 key={`${chord}-${index}`}
                 className="bg-white rounded-2xl px-4 py-3 mr-2 mb-2"
               >
-                <Text className="text-black text-base font-bold">{chord}</Text>
+                <Text className="text-black text-sm font-bold">
+                  {chord}
+                </Text>
               </View>
             ))}
           </View>
         </View>
 
+        {/* Detect Another Song */}
         <TouchableOpacity
           activeOpacity={0.85}
-          className="w-full bg-white rounded-2xl mt-12 py-5 items-center justify-center"
+          className="w-full bg-white rounded-2xl mt-10 py-4 items-center justify-center"
           onPress={onDetectAnother}
         >
-          <Text className="text-black text-lg font-bold">
+          <Text className="text-black text-base font-bold">
             Detect Another Song
           </Text>
         </TouchableOpacity>

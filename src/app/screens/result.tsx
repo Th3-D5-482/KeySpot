@@ -15,6 +15,14 @@ export default function Result() {
     diatonicChords,
   } = parseResultParams(params);
 
+  const DetectAnotherFunction = () => {
+    router.replace("/(tabs)/home");
+  }
+
+  const TransposeFunction = () => {
+    router.push('/(tabs)/transpose');
+  }
+
   return (
     <Screen>
       <ResultContent
@@ -23,9 +31,8 @@ export default function Result() {
         confidenceValue={confidenceValue}
         diatonicChords={diatonicChords}
         detectedChords={detectedChords}
-        onDetectAnother={() => {
-          router.replace("/(tabs)/home");
-        }}
+        onDetectAnother={DetectAnotherFunction}
+        onTranpose={TransposeFunction}
       />
     </Screen>
   );
