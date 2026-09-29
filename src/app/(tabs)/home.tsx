@@ -40,9 +40,13 @@ export default function Home() {
     }
   };
 
+  const handleTranspose = () => {
+    router.push('/(tabs)/transpose');
+  }
+
   return (
     <Screen>
-      <ListenPanel isListening={isListening} onListen={handleListen} />
+      <ListenPanel isListening={isListening} onListen={handleListen} onTranspose={handleTranspose} />
     </Screen>
   );
 }
