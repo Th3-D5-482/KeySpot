@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { TransposeButton } from "../TransposeButton";
 
@@ -14,6 +15,7 @@ type ResultContentProps = {
   detectedChords: string[];
   onDetectAnother: () => void;
   onTranpose: () => void;
+  onBack:() => void;
 };
 
 export const ResultContent = ({
@@ -24,6 +26,7 @@ export const ResultContent = ({
   detectedChords,
   onDetectAnother,
   onTranpose,
+  onBack,
 }: ResultContentProps) => {
   return (
     <View className="flex-1 bg-black px-5">
@@ -35,13 +38,29 @@ export const ResultContent = ({
         }}
       >
         {/* Header */}
-        <Text className="text-gray-500 text-xs font-semibold tracking-[2px]">
-          KEYSPOT RESULT
-        </Text>
+        <View className="flex-row items-center px-1">
+          <TouchableOpacity
+            className="w-10 h-10 items-center justify-center rounded-full bg-[#111111]"
+            onPress={onBack}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name="arrow-back"
+              size={20}
+              color="#FFFFFF"
+            />
+          </TouchableOpacity>
 
-        <Text className="text-white text-3xl font-bold mt-2">
-          Detected Key
-        </Text>
+          <View className="ml-4">
+            <Text className="text-gray-500 text-[11px] font-semibold tracking-[2px]">
+              KEYSPOT RESULT
+            </Text>
+
+            <Text className="text-white text-[28px] font-bold mt-1">
+              Detected Key
+            </Text>
+          </View>
+        </View>
 
         {/* Detected Key Card */}
         <View className="w-full rounded-[30px] border border-gray-800 bg-[#080808] items-center py-10 mt-7">

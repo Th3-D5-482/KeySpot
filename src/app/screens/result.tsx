@@ -23,6 +23,10 @@ export default function Result() {
     router.push('/(tabs)/transpose');
   }
 
+  const BackFunction = () => {
+    router.back();
+  }
+
   return (
     <Screen>
       <ResultContent
@@ -33,6 +37,7 @@ export default function Result() {
         detectedChords={detectedChords}
         onDetectAnother={DetectAnotherFunction}
         onTranpose={TransposeFunction}
+        onBack={BackFunction}
       />
     </Screen>
   );
