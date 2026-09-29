@@ -26,7 +26,7 @@ export default function Home() {
       }
 
       router.push({
-        pathname: "/screens/result",
+        pathname: "/(tabs)/result",
         params: toResultParams(outcome.result),
       });
     } catch (error) {

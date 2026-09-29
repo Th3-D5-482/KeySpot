@@ -17,15 +17,15 @@ export default function Result() {
 
   const DetectAnotherFunction = () => {
     router.replace("/(tabs)/home");
-  }
+  };
 
   const TransposeFunction = () => {
-    router.push('/(tabs)/transpose');
-  }
+    router.push("/(tabs)/transpose");
+  };
 
   const BackFunction = () => {
     router.back();
-  }
+  };
 
   return (
     <Screen>
