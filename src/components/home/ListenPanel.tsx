@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { TransposeButton } from "../TransposeButton";
 
 type ListenPanelProps = {
   isListening: boolean;
@@ -15,7 +14,7 @@ type ListenPanelProps = {
   secondPulse: Animated.Value,
 };
 
-export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse,secondPulse }: ListenPanelProps) => {
+export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse, secondPulse }: ListenPanelProps) => {
   return (
     <View className="flex-1 bg-black px-5 py-5">
 
@@ -31,7 +30,7 @@ export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse,sec
       </View>
 
       {/* Main Card */}
-      <View className="flex-1 justify-center">
+      <View className="flex-1 mt-8 justify-center">
         <View className="w-full rounded-[32px] border border-gray-800 bg-[#080808] px-6 py-9 items-center">
 
           <Text className="text-white text-4xl font-bold text-center">
@@ -159,9 +158,6 @@ export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse,sec
           )}
         </View>
       </View>
-
-      {/* Transpose */}
-      <TransposeButton onTranspose={onTranspose} />
 
       {/* Footer */}
       <View className="items-center pb-5 mt-7">
