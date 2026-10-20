@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Footer } from "../Footer";
 
 type ListenPanelProps = {
   isListening: boolean;
@@ -160,11 +161,7 @@ export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse, se
       </View>
 
       {/* Footer */}
-      <View className="items-center pb-5 mt-7">
-        <Text className="text-gray-700 text-[10px] font-medium tracking-widest">
-          HEAR • KNOW • PLAY
-        </Text>
-      </View>
+      <Footer/>
 
     </View>
   );

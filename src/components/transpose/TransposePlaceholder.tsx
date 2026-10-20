@@ -1,5 +1,6 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { ChordsDropDown } from "../ChordsDropDown";
+import { Footer } from "../Footer";
 
 type TransposePlaceholderProps = {
   originalKey: string;
@@ -26,12 +27,16 @@ export const TransposePlaceholder = ({ originalKey, setOriginalKey, musicalKeys,
         <Text className="text-gray-500 text-xl mt-1">want to transpose to. See the difference</Text>
         <Text className="text-gray-500 text-xl mt-1">and relative chords.</Text>
       </View>
-      <View className="pt-16 items-center border border-gray-800 rounded-[32px] mt-8 px-6 py-32">
+      <View className="pt-16 items-center border border-gray-800 rounded-[32px] mt-8 px-6 py-9">
         <Text className="text-white w-full">Original Key</Text>
         <ChordsDropDown originalKey={originalKey} setOriginalKey={(key) => setOriginalKey(key.toString())} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} musicalKeys={musicalKeys} />
         <Text className="text-white w-full mt-20">Target Key</Text>
         <ChordsDropDown originalKey={targetKey} setOriginalKey={(key) => setTargetKey(key.toString())} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} musicalKeys={musicalKeys} />
+        <TouchableOpacity className="w-full mt-28 border border-gray-800 rounded-2xl bg-white h-16 items-center justify-center">
+          <Text className='text-black font-extrabold'>Calculate</Text>
+        </TouchableOpacity>
       </View>
+      <Footer />
     </View>
   );
 }
