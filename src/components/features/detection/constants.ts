@@ -20,16 +20,16 @@ export const MIN_RMS = 0.002;
 
 export const NOTE_NAMES = [
   "C",
-  "C#",
+  "C# / Db",
   "D",
-  "D#",
+  "D# / Eb",
   "E",
   "F",
-  "F#",
+  "F# / Gb",
   "G",
-  "G#",
+  "G# / Ab",
   "A",
-  "A#",
+  "A# / Bb",
   "B",
 ];
 
