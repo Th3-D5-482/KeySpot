@@ -7,9 +7,11 @@ type TransposePlaceholderProps = {
   musicalKeys: string[];
   pickerVisible: boolean;
   setPickerVisible: (visible: boolean) => void;
+  targetKey: string;
+  setTargetKey: (key: string) => void;
 };
 
-export const TransposePlaceholder = ({ originalKey, setOriginalKey, musicalKeys, pickerVisible, setPickerVisible }: TransposePlaceholderProps) => {
+export const TransposePlaceholder = ({ originalKey, setOriginalKey, musicalKeys, pickerVisible, setPickerVisible, targetKey, setTargetKey }: TransposePlaceholderProps) => {
   return (
     <View className="flex-1 py-5 px-5">
       <View className="pt-7">
@@ -24,9 +26,11 @@ export const TransposePlaceholder = ({ originalKey, setOriginalKey, musicalKeys,
         <Text className="text-gray-500 text-xl mt-1">want to transpose to. See the difference</Text>
         <Text className="text-gray-500 text-xl mt-1">and relative chords.</Text>
       </View>
-      <View className="pt-16 items-center border border-gray-800 rounded-[32px] mt-8 px-6 py-20">
+      <View className="pt-16 items-center border border-gray-800 rounded-[32px] mt-8 px-6 py-32">
         <Text className="text-white w-full">Original Key</Text>
         <ChordsDropDown originalKey={originalKey} setOriginalKey={(key) => setOriginalKey(key.toString())} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} musicalKeys={musicalKeys} />
+        <Text className="text-white w-full mt-20">Target Key</Text>
+        <ChordsDropDown originalKey={targetKey} setOriginalKey={(key) => setTargetKey(key.toString())} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} musicalKeys={musicalKeys} />
       </View>
     </View>
   );
