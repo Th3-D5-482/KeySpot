@@ -20,7 +20,10 @@ export default function Result() {
   };
 
   const TransposeFunction = () => {
-    router.push("/(tabs)/transpose");
+    router.push({
+      pathname: "/(tabs)/transpose",
+      params: { ...params, returnTo: "result" },
+    });
   };
 
   const BackFunction = () => {
