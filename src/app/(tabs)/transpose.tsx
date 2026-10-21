@@ -16,16 +16,7 @@ export default function Transpose() {
     chords,
     progression,
     diatonic,
-  } = useLocalSearchParams<{
-    returnTo?: string;
-    key?: string;
-    mode?: string;
-    confidence?: string;
-    alternative?: string;
-    chords?: string;
-    progression?: string;
-    diatonic?: string;
-  }>();
+  } = useLocalSearchParams();
   const [originalKey, setOriginalKey] = useState("C");
   const [targetKey, setTargetKey] = useState("A");
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -69,9 +60,28 @@ export default function Transpose() {
     ])
   );
 
+  const backFunction = () => {
+    if (returnTo === "result") {
+      router.replace({
+        pathname: "/(tabs)/result",
+        params: {
+          key,
+          mode,
+          confidence,
+          alternative,
+          chords,
+          progression,
+          diatonic,
+        },
+      });
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <Screen>
-      <TransposePlaceholder originalKey={originalKey} setOriginalKey={setOriginalKey} targetKey={targetKey} setTargetKey={setTargetKey} musicalKeys={NOTE_NAMES} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} />
+      <TransposePlaceholder originalKey={originalKey} setOriginalKey={setOriginalKey} targetKey={targetKey} setTargetKey={setTargetKey} musicalKeys={NOTE_NAMES} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} onBackFunction={backFunction} />
     </Screen>
   );
 }
