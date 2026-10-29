@@ -49,11 +49,11 @@ export default function TabsLayout() {
         name="transpose"
         options={{
           title: "Transpose",
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ size, focused }) => (
             <Ionicons
               name={focused ? "swap-horizontal" : "swap-horizontal-outline"}
               size={size}
-              color={color}
+              color={focused ? "#FFFFFF" : "#777781"}
             />
           ),
         }}
