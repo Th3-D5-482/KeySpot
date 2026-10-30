@@ -2,12 +2,20 @@ import {
   requestRecordingPermissionsAsync,
   useAudioStream,
 } from "expo-audio";
-import { useEffect, useRef, useState } from "react";
-import { Alert, Linking } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Alert, Linking, Platform } from "react-native";
 
 import { analyzeRecording } from "./analyzeRecording";
 import { LISTENING_TIME, REQUESTED_SAMPLE_RATE } from "./constants";
 import type { AnalysisResult } from "./types";
+
+type WebAudioCapture = {
+  mediaStream: MediaStream;
+  audioContext: AudioContext;
+  source: MediaStreamAudioSourceNode;
+  processor: ScriptProcessorNode;
+  silentGain: GainNode;
+};
 
 export type ListenOutcome =
   | { status: "success"; result: AnalysisResult }
@@ -20,6 +28,63 @@ export const useListenAndDetect = () => {
   const isListeningRef = useRef(false);
   const actualSampleRate = useRef(REQUESTED_SAMPLE_RATE);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const webAudioCapture = useRef<WebAudioCapture | null>(null);
+
+  const stopWebAudioCapture = useCallback(async () => {
+    const capture = webAudioCapture.current;
+    webAudioCapture.current = null;
+
+    if (!capture) {
+      return;
+    }
+
+    capture.processor.disconnect();
+    capture.source.disconnect();
+    capture.silentGain.disconnect();
+    capture.mediaStream.getTracks().forEach((track) => track.stop());
+
+    if (capture.audioContext.state !== "closed") {
+      await capture.audioContext.close();
+    }
+  }, []);
+
+  const startWebAudioCapture = async () => {
+    if (!navigator.mediaDevices?.getUserMedia || !window.AudioContext) {
+      throw new Error("Live microphone capture is not available in this browser.");
+    }
+
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: { channelCount: 1 },
+      video: false,
+    });
+    const audioContext = new window.AudioContext();
+    const source = audioContext.createMediaStreamSource(mediaStream);
+    const processor = audioContext.createScriptProcessor(4096, 1, 1);
+    const silentGain = audioContext.createGain();
+
+    actualSampleRate.current = audioContext.sampleRate;
+    processor.onaudioprocess = (event) => {
+      if (!isListeningRef.current) {
+        return;
+      }
+
+      audioBuffers.current.push(
+        new Float32Array(event.inputBuffer.getChannelData(0))
+      );
+    };
+    silentGain.gain.value = 0;
+    source.connect(processor);
+    processor.connect(silentGain);
+    silentGain.connect(audioContext.destination);
+    webAudioCapture.current = {
+      mediaStream,
+      audioContext,
+      source,
+      processor,
+      silentGain,
+    };
+    await audioContext.resume();
+  };
 
   useEffect(() => {
     return () => {
@@ -27,8 +92,12 @@ export const useListenAndDetect = () => {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
+
+      void stopWebAudioCapture().catch((error: unknown) => {
+        console.error("Could not stop microphone capture:", error);
+      });
     };
-  }, []);
+  }, [stopWebAudioCapture]);
 
   const audioStream = useAudioStream({
     sampleRate: REQUESTED_SAMPLE_RATE,
@@ -69,13 +138,24 @@ export const useListenAndDetect = () => {
       setIsListening(true);
 
       console.log("Starting microphone...");
-      await audioStream.stream.start();
+      if (Platform.OS === "web") {
+        await startWebAudioCapture();
+      } else {
+        if (!audioStream.stream) {
+          throw new Error("KeySpot could not create an audio stream.");
+        }
+        await audioStream.stream.start();
+      }
       console.log("Listening for", LISTENING_TIME / 1000, "seconds...");
 
       return await new Promise((resolve, reject) => {
         timeoutRef.current = setTimeout(async () => {
           try {
-            await audioStream.stream.stop();
+            if (Platform.OS === "web") {
+              await stopWebAudioCapture();
+            } else {
+              await audioStream.stream.stop();
+            }
             isListeningRef.current = false;
             setIsListening(false);
 
@@ -102,13 +182,19 @@ export const useListenAndDetect = () => {
       setIsListening(false);
       Alert.alert(
         "Microphone Error",
-        "KeySpot could not start the microphone."
+        error instanceof Error
+          ? error.message
+          : "KeySpot could not start the microphone."
       );
       return { status: "cancelled" };
     }
   };
 
   const requestPermissionAndListen = async (): Promise<ListenOutcome> => {
+    if (Platform.OS === "web") {
+      return await startListening();
+    }
+
     try {
       const permission = await requestRecordingPermissionsAsync();
 

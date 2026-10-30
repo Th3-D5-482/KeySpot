@@ -1,7 +1,7 @@
 import type { AnalysisResult } from "./types";
 
 export const toResultParams = (result: AnalysisResult) => ({
-  key: result.key,
+  detectedKey: result.key,
   mode: result.mode,
   confidence: result.confidence.toFixed(1),
   alternative: result.alternative,
@@ -11,13 +11,14 @@ export const toResultParams = (result: AnalysisResult) => ({
 });
 
 export const parseResultParams = (params: {
-  key?: string | string[];
+  detectedKey?: string | string[];
   mode?: string | string[];
   confidence?: string | string[];
   chords?: string | string[];
   diatonic?: string | string[];
 }) => {
-  const detectedKey = typeof params.key === "string" ? params.key : "?";
+  const detectedKey =
+    typeof params.detectedKey === "string" ? params.detectedKey : "?";
   const detectedMode = typeof params.mode === "string" ? params.mode : "?";
   const confidenceValue =
     typeof params.confidence === "string" ? params.confidence : "0";

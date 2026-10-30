@@ -1,10 +1,9 @@
-import { useRouter } from "expo-router";
-import { Alert, Animated } from "react-native";
-
 import { toResultParams, useListenAndDetect } from "@/components/features/detection";
 import { ListenPanel } from "@/components/home/ListenPanel";
 import { Screen } from "@/components/Screen";
+import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
+import { Alert, Animated } from "react-native";
 
 export default function Home() {
   const router = useRouter();

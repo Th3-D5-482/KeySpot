@@ -9,7 +9,7 @@ export default function Transpose() {
   const router = useRouter();
   const {
     returnTo,
-    key,
+    detectedKey,
     mode,
     confidence,
     alternative,
@@ -20,6 +20,16 @@ export default function Transpose() {
   const [originalKey, setOriginalKey] = useState("C");
   const [targetKey, setTargetKey] = useState("A");
   const [pickerVisible, setPickerVisible] = useState(false);
+
+  const resultParams = {
+    detectedKey,
+    mode,
+    confidence,
+    alternative,
+    chords,
+    progression,
+    diatonic,
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -32,56 +42,50 @@ export default function Transpose() {
         () => {
           router.replace({
             pathname: "/(tabs)/result",
-            params: {
-              key,
-              mode,
-              confidence,
-              alternative,
-              chords,
-              progression,
-              diatonic,
-            },
+            params: resultParams,
           });
           return true;
         }
       );
 
       return () => subscription.remove();
-    }, [
-      alternative,
-      chords,
-      confidence,
-      diatonic,
-      key,
-      mode,
-      progression,
-      returnTo,
-      router,
-    ])
+    }, [returnTo, router, detectedKey, mode, confidence, alternative, chords, progression, diatonic])
   );
 
   const backFunction = () => {
     if (returnTo === "result") {
       router.replace({
         pathname: "/(tabs)/result",
-        params: {
-          key,
-          mode,
-          confidence,
-          alternative,
-          chords,
-          progression,
-          diatonic,
-        },
+        params: resultParams,
       });
     } else {
       router.back();
     }
   };
 
+  const onCalculate = () => {
+    router.push({
+      pathname: "/(tabs)/outcome",
+      params: {
+        originalKey,
+        targetKey,
+      },
+    });
+  };
+
   return (
     <Screen>
-      <TransposePlaceholder originalKey={originalKey} setOriginalKey={setOriginalKey} targetKey={targetKey} setTargetKey={setTargetKey} musicalKeys={NOTE_NAMES} pickerVisible={pickerVisible} setPickerVisible={setPickerVisible} onBackFunction={backFunction} />
+      <TransposePlaceholder
+        originalKey={originalKey}
+        setOriginalKey={setOriginalKey}
+        targetKey={targetKey}
+        setTargetKey={setTargetKey}
+        musicalKeys={NOTE_NAMES}
+        pickerVisible={pickerVisible}
+        setPickerVisible={setPickerVisible}
+        onBackFunction={backFunction}
+        onCalculate={onCalculate}
+      />
     </Screen>
   );
 }

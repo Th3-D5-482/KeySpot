@@ -22,7 +22,16 @@ export default function Result() {
   const TransposeFunction = () => {
     router.push({
       pathname: "/(tabs)/transpose",
-      params: { ...params, returnTo: "result" },
+      params: {
+        returnTo: "result",
+        detectedKey: params.detectedKey,
+        mode: params.mode,
+        confidence: params.confidence,
+        alternative: params.alternative,
+        chords: params.chords,
+        progression: params.progression,
+        diatonic: params.diatonic,
+      },
     });
   };
 

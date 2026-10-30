@@ -2,11 +2,19 @@ import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Image } from "react-native";
 
+export const unstable_settings = {
+  anchor: "home",
+};
+
 export default function TabsLayout() {
   return (
     <Tabs
+      backBehavior="initialRoute"
       screenOptions={{
         headerShown: false,
+        sceneStyle: {
+          backgroundColor: "#000000",
+        },
         tabBarStyle: {
           backgroundColor: "#0B0B0F",
           borderTopColor: "#25252D",
@@ -61,7 +69,33 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="result"
         options={{
-          href: null,
+          title: "Result",
+          tabBarItemStyle: {
+            display: "none",
+          },
+          tabBarIcon: ({ size, focused }) => (
+            <Ionicons
+              name={focused ? "document-text" : "document-text-outline"}
+              size={size}
+              color={focused ? "#FFFFFF" : "#777781"}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="outcome"
+        options={{
+          title: "Outcome",
+          tabBarItemStyle: {
+            display: "none",
+          },
+          tabBarIcon: ({ size, focused }) => (
+            <Ionicons
+              name={focused ? "calculator" : "calculator-outline"}
+              size={size}
+              color={focused ? "#FFFFFF" : "#777781"}
+            />
+          ),
         }}
       />
     </Tabs>

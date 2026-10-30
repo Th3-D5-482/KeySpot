@@ -12,6 +12,7 @@ type TransposePlaceholderProps = {
   targetKey: string;
   setTargetKey: (key: string) => void;
   onBackFunction?: () => void;
+  onCalculate: () => void;
 };
 
 export const TransposePlaceholder = ({
@@ -23,6 +24,7 @@ export const TransposePlaceholder = ({
   targetKey,
   setTargetKey,
   onBackFunction,
+  onCalculate,
 }: TransposePlaceholderProps) => {
   return (
     <View className="flex-1 bg-black px-5 py-5">
@@ -99,6 +101,7 @@ export const TransposePlaceholder = ({
           {/* Calculate Button */}
           <TouchableOpacity
             activeOpacity={0.85}
+            onPress={onCalculate}
             className="w-full mt-9 h-16 rounded-2xl bg-white items-center justify-center"
           >
             <Text className="text-black text-base font-bold">
