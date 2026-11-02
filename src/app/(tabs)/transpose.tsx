@@ -1,8 +1,9 @@
 import { NOTE_NAMES } from "@/components/features/detection/constants";
 import { Screen } from "@/components/Screen";
 import { TransposePlaceholder } from "@/components/transpose/TransposePlaceholder";
+import { useBackFunction } from "@/hooks/useBackFunction";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BackHandler } from "react-native";
 
 export default function Transpose() {
@@ -21,15 +22,38 @@ export default function Transpose() {
   const [targetKey, setTargetKey] = useState("A");
   const [pickerVisible, setPickerVisible] = useState(false);
 
-  const resultParams = {
-    detectedKey,
-    mode,
-    confidence,
-    alternative,
-    chords,
-    progression,
-    diatonic,
-  };
+  const resultParams = useMemo(
+    () => ({
+      detectedKey,
+      mode,
+      confidence,
+      alternative,
+      chords,
+      progression,
+      diatonic,
+    }),
+    [
+      detectedKey,
+      mode,
+      confidence,
+      alternative,
+      chords,
+      progression,
+      diatonic,
+    ]
+  );
+
+  const navigateBack = useCallback(() => {
+    if (returnTo === "result") {
+      router.replace({
+        pathname: "/(tabs)/result",
+        params: resultParams,
+      });
+    } else {
+      router.back();
+    }
+  }, [returnTo, router, resultParams]);
+  const backFunction = useBackFunction(navigateBack);
 
   useFocusEffect(
     useCallback(() => {
@@ -40,28 +64,14 @@ export default function Transpose() {
       const subscription = BackHandler.addEventListener(
         "hardwareBackPress",
         () => {
-          router.replace({
-            pathname: "/(tabs)/result",
-            params: resultParams,
-          });
+          backFunction();
           return true;
         }
       );
 
       return () => subscription.remove();
-    }, [returnTo, router, detectedKey, mode, confidence, alternative, chords, progression, diatonic])
+    }, [returnTo, backFunction])
   );
-
-  const backFunction = () => {
-    if (returnTo === "result") {
-      router.replace({
-        pathname: "/(tabs)/result",
-        params: resultParams,
-      });
-    } else {
-      router.back();
-    }
-  };
 
   const onCalculate = () => {
     router.push({

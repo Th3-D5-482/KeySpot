@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { parseResultParams } from "@/components/features/detection";
 import { ResultContent } from "@/components/result/ResultContent";
 import { Screen } from "@/components/Screen";
+import { useBackFunction } from "@/hooks/useBackFunction";
 
 export default function Result() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function Result() {
     detectedChords,
     diatonicChords,
   } = parseResultParams(params);
+  const backFunction = useBackFunction();
 
   const DetectAnotherFunction = () => {
     router.replace("/(tabs)/home");
@@ -35,10 +37,6 @@ export default function Result() {
     });
   };
 
-  const BackFunction = () => {
-    router.back();
-  };
-
   return (
     <Screen>
       <ResultContent
@@ -49,7 +47,7 @@ export default function Result() {
         detectedChords={detectedChords}
         onDetectAnother={DetectAnotherFunction}
         onTranpose={TransposeFunction}
-        onBack={BackFunction}
+        onBack={backFunction}
       />
     </Screen>
   );
