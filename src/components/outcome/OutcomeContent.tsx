@@ -1,9 +1,14 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native';
+import { Header } from '../Header';
 
-export const OutcomeContent = () => {
+type OutcomeContentProps = {
+  onBackFunction?: () => void;
+}
+
+export const OutcomeContent = ({ onBackFunction }: OutcomeContentProps) => {
   return (
-    <View className='flex-1 px-5 bg-black'>
-      <Text className='text-white'> Hello World</Text>
+    <View className='flex-1 px-5 bg-black py-5'>
+      <Header showBackButton={true} title='TRANSPOSE RESULT' onBackFunction={onBackFunction} />
     </View>
   )
 }

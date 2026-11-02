@@ -1,7 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 import { ChordsDropDown } from "../ChordsDropDown";
 import { Footer } from "../Footer";
+import { Header } from "../Header";
 
 type TransposePlaceholderProps = {
   originalKey: string;
@@ -11,6 +11,7 @@ type TransposePlaceholderProps = {
   setPickerVisible: (visible: boolean) => void;
   targetKey: string;
   setTargetKey: (key: string) => void;
+  showBackButton: boolean;
   onBackFunction?: () => void;
   onCalculate: () => void;
 };
@@ -23,6 +24,7 @@ export const TransposePlaceholder = ({
   setPickerVisible,
   targetKey,
   setTargetKey,
+  showBackButton,
   onBackFunction,
   onCalculate,
 }: TransposePlaceholderProps) => {
@@ -30,26 +32,11 @@ export const TransposePlaceholder = ({
     <View className="flex-1 bg-black px-5 py-5">
 
       {/* Header */}
-      <View className="flex-row items-center px-1 pt-7">
-        <TouchableOpacity activeOpacity={0.7} onPress={onBackFunction}
-          className="w-10 h-10 items-center justify-center rounded-full bg-[#111111]" 
-        >
-          <Ionicons
-            name="arrow-back"
-            size={20}
-            color="#FFFFFF"
-          />
-        </TouchableOpacity>
-        <View className="ml-4">
-          <Text className="text-white text-3xl font-bold tracking-tight">
-            KeySpot
-          </Text>
-
-          <Text className="text-gray-500 text-xs font-medium mt-1 tracking-widest">
-            TRANSPOSE
-          </Text>
-        </View>
-      </View>
+      <Header
+        title="TRANSPOSE"
+        showBackButton={showBackButton}
+        onBackFunction={onBackFunction}
+      />
 
       {/* Main Content */}
       <View className="flex-1 mt-8 justify-center">

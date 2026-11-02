@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native";
 import { Footer } from "../Footer";
+import { Header } from "../Header";
 
 type ListenPanelProps = {
   isListening: boolean;
@@ -20,15 +21,7 @@ export const ListenPanel = ({ isListening, onListen, onTranspose, firstPulse, se
     <View className="flex-1 bg-black px-5 py-5">
 
       {/* Header */}
-      <View className="pt-7">
-        <Text className="text-white text-3xl font-bold tracking-tight">
-          KeySpot
-        </Text>
-
-        <Text className="text-gray-500 text-xs font-medium mt-1 tracking-widest">
-          MUSIC KEY DETECTOR
-        </Text>
-      </View>
+      <Header title="MUSIC KEY DETECTOR" showBackButton={false} onBackFunction={() => {}} />
 
       {/* Main Card */}
       <View className="flex-1 mt-8 justify-center">

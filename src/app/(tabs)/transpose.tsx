@@ -83,6 +83,7 @@ export default function Transpose() {
         musicalKeys={NOTE_NAMES}
         pickerVisible={pickerVisible}
         setPickerVisible={setPickerVisible}
+        showBackButton={returnTo === "result"}
         onBackFunction={backFunction}
         onCalculate={onCalculate}
       />

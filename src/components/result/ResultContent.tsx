@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Header } from "../Header";
 
 type DiatonicChord = {
   degree: string;
@@ -32,34 +33,12 @@ export const ResultContent = ({
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: 42,
+          paddingTop: 18,
           paddingBottom: 36,
         }}
       >
         {/* Header */}
-        <View className="flex-row items-center px-1">
-          <TouchableOpacity
-            className="w-10 h-10 items-center justify-center rounded-full bg-[#111111]"
-            onPress={onBack}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name="arrow-back"
-              size={20}
-              color="#FFFFFF"
-            />
-          </TouchableOpacity>
-
-          <View className="ml-4">
-            <Text className="text-gray-500 text-[11px] font-semibold tracking-[2px]">
-              KEYSPOT RESULT
-            </Text>
-
-            <Text className="text-white text-[28px] font-bold mt-1">
-              Detected Key
-            </Text>
-          </View>
-        </View>
+        <Header title="DETECTED KEY" showBackButton={true} onBackFunction={onBack} />
 
         {/* Detected Key Card */}
         <View className="w-full rounded-[30px] border border-gray-800 bg-[#080808] items-center py-10 mt-7">
