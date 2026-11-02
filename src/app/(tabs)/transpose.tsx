@@ -2,12 +2,18 @@ import { NOTE_NAMES } from "@/components/features/detection/constants";
 import { Screen } from "@/components/Screen";
 import { TransposePlaceholder } from "@/components/transpose/TransposePlaceholder";
 import { useBackFunction } from "@/hooks/useBackFunction";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { BackHandler } from "react-native";
 
 export default function Transpose() {
   const router = useRouter();
+  const isFocused = useIsFocused();
   const {
     returnTo,
     detectedKey,
@@ -21,6 +27,7 @@ export default function Transpose() {
   const [originalKey, setOriginalKey] = useState("C");
   const [targetKey, setTargetKey] = useState("A");
   const [pickerVisible, setPickerVisible] = useState(false);
+  const showBackButton = isFocused && returnTo === "result";
 
   const resultParams = useMemo(
     () => ({
@@ -43,8 +50,18 @@ export default function Transpose() {
     ]
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      if (returnTo !== "result") {
+        return;
+      }
+
+      return () => router.setParams({ returnTo: undefined });
+    }, [returnTo, router])
+  );
+
   const navigateBack = useCallback(() => {
-    if (returnTo === "result") {
+    if (showBackButton) {
       router.replace({
         pathname: "/(tabs)/result",
         params: resultParams,
@@ -52,12 +69,12 @@ export default function Transpose() {
     } else {
       router.back();
     }
-  }, [returnTo, router, resultParams]);
+  }, [showBackButton, router, resultParams]);
   const backFunction = useBackFunction(navigateBack);
 
   useFocusEffect(
     useCallback(() => {
-      if (returnTo !== "result") {
+      if (!showBackButton) {
         return;
       }
 
@@ -70,7 +87,7 @@ export default function Transpose() {
       );
 
       return () => subscription.remove();
-    }, [returnTo, backFunction])
+    }, [showBackButton, backFunction])
   );
 
   const onCalculate = () => {
@@ -93,7 +110,7 @@ export default function Transpose() {
         musicalKeys={NOTE_NAMES}
         pickerVisible={pickerVisible}
         setPickerVisible={setPickerVisible}
-        showBackButton={returnTo === "result"}
+        showBackButton={showBackButton}
         onBackFunction={backFunction}
         onCalculate={onCalculate}
       />
