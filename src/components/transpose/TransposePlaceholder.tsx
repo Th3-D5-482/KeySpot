@@ -7,8 +7,6 @@ type TransposePlaceholderProps = {
   originalKey: string;
   setOriginalKey: (key: string) => void;
   musicalKeys: string[];
-  pickerVisible: boolean;
-  setPickerVisible: (visible: boolean) => void;
   targetKey: string;
   setTargetKey: (key: string) => void;
   showBackButton: boolean;
@@ -20,8 +18,6 @@ export const TransposePlaceholder = ({
   originalKey,
   setOriginalKey,
   musicalKeys,
-  pickerVisible,
-  setPickerVisible,
   targetKey,
   setTargetKey,
   showBackButton,
@@ -67,8 +63,6 @@ export const TransposePlaceholder = ({
             <ChordsDropDown
               originalKey={originalKey}
               setOriginalKey={(key) => setOriginalKey(key.toString())}
-              pickerVisible={pickerVisible}
-              setPickerVisible={setPickerVisible}
               musicalKeys={musicalKeys}
             />
 
@@ -79,8 +73,6 @@ export const TransposePlaceholder = ({
             <ChordsDropDown
               originalKey={targetKey}
               setOriginalKey={(key) => setTargetKey(key.toString())}
-              pickerVisible={pickerVisible}
-              setPickerVisible={setPickerVisible}
               musicalKeys={musicalKeys}
             />
           </View>

@@ -26,7 +26,6 @@ export default function Transpose() {
   } = useLocalSearchParams();
   const [originalKey, setOriginalKey] = useState("C");
   const [targetKey, setTargetKey] = useState("A");
-  const [pickerVisible, setPickerVisible] = useState(false);
   const showBackButton = isFocused && returnTo === "result";
 
   const resultParams = useMemo(
@@ -108,8 +107,6 @@ export default function Transpose() {
         targetKey={targetKey}
         setTargetKey={setTargetKey}
         musicalKeys={NOTE_NAMES}
-        pickerVisible={pickerVisible}
-        setPickerVisible={setPickerVisible}
         showBackButton={showBackButton}
         onBackFunction={backFunction}
         onCalculate={onCalculate}
