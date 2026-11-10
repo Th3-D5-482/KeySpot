@@ -5,9 +5,10 @@ type TransposeValuesProps = {
     originalKey?: string;
     targetKey?: string;
     sign?: string;
+    semitones: number | null;
 }
 
-export const TransposeValues = ({ originalKey, targetKey, sign }: TransposeValuesProps) => {
+export const TransposeValues = ({ originalKey, targetKey, sign, semitones }: TransposeValuesProps) => {
     return (
         <>
             <View className='flex-row items-center justify-center'>
@@ -34,7 +35,7 @@ export const TransposeValues = ({ originalKey, targetKey, sign }: TransposeValue
                 </Text>
 
                 <Text className='text-white font-bold text-4xl tracking-tight'>
-                    3
+                    {semitones ?? 'N/A'}
                 </Text>
             </View>
 
