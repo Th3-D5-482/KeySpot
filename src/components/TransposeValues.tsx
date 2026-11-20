@@ -11,7 +11,7 @@ type TransposeValuesProps = {
 export const TransposeValues = ({ originalKey, targetKey, sign, semitones }: TransposeValuesProps) => {
     return (
         <>
-            <View className='flex-row items-center justify-center'>
+            <View className='flex-row items-center justify-center '>
                 <Text className='text-white font-bold text-xl tracking-wide'>
                     {originalKey}
                 </Text>
