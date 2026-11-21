@@ -87,7 +87,7 @@ export default function Outcome() {
 
   const getGuitarOptions = (
     key?: string,
-    maxFret = 5
+    maxFret = 7
   ): GuitarOption[] => {
     const targetIndex = NOTE_NAMES.indexOf(key ?? "");
 
