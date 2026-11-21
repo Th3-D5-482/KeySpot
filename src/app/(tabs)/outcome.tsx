@@ -1,9 +1,13 @@
 import { NOTE_NAMES } from "@/components/features/detection/constants";
 import { OutcomeContent } from "@/components/outcome/OutcomeContent";
 import { Screen } from "@/components/Screen";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { useCallback } from "react";
-import { useBackFunction } from "@/hooks/useBackFunction";
+import { BackHandler } from "react-native";
 
 type GuitarOption = {
   shapeKey: string;
@@ -12,7 +16,8 @@ type GuitarOption = {
 
 export default function Outcome() {
   const router = useRouter();
-  const { originalKey, targetKey } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const { originalKey, targetKey, returnTo } = params;
 
   const normalizedOriginalKey = Array.isArray(originalKey)
     ? originalKey[0]
@@ -22,10 +27,54 @@ export default function Outcome() {
     ? targetKey[0]
     : targetKey;
 
-  const returnToTranspose = useCallback(() => {
-    router.replace("/(tabs)/transpose");
-  }, [router]);
-  const onBackFunction = useBackFunction(undefined, returnToTranspose);
+  const navigateBack = useCallback(() => {
+    const normalizedReturnTo = Array.isArray(returnTo)
+      ? returnTo[0]
+      : returnTo;
+
+    if (normalizedReturnTo === "home") {
+      router.replace("/home");
+    } else if (normalizedReturnTo === "result") {
+      router.replace({
+        pathname: "/result",
+        params: {
+          detectedKey: params.detectedKey,
+          mode: params.mode,
+          confidence: params.confidence,
+          alternative: params.alternative,
+          chords: params.chords,
+          progression: params.progression,
+          diatonic: params.diatonic,
+        },
+      });
+    } else {
+      router.replace("/transpose");
+    }
+  }, [
+    router,
+    returnTo,
+    params.alternative,
+    params.chords,
+    params.confidence,
+    params.detectedKey,
+    params.diatonic,
+    params.mode,
+    params.progression,
+  ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          navigateBack();
+          return true;
+        }
+      );
+
+      return () => subscription.remove();
+    }, [navigateBack])
+  );
 
   const getSemitones = (fromKey?: string, toKey?: string) => {
     const fromIndex = NOTE_NAMES.indexOf(fromKey ?? "");
@@ -78,7 +127,7 @@ export default function Outcome() {
   return (
     <Screen>
       <OutcomeContent
-        onBackFunction={onBackFunction}
+        onBackFunction={navigateBack}
         originalKey={normalizedOriginalKey}
         targetKey={normalizedTargetKey}
         getSemitones={getSemitones}

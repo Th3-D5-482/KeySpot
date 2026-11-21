@@ -6,7 +6,7 @@ import {
 import { ListenPanel } from "@/components/home/ListenPanel";
 import { Screen } from "@/components/Screen";
 import { useRouter } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Animated } from "react-native";
 
 export default function Home() {
@@ -15,8 +15,8 @@ export default function Home() {
   const { isListening, requestPermissionAndListen } =
     useListenAndDetect();
 
-  const firstPulse = useRef(new Animated.Value(0)).current;
-  const secondPulse = useRef(new Animated.Value(0)).current;
+  const [firstPulse] = useState(() => new Animated.Value(0));
+  const [secondPulse] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     if (!isListening) {
@@ -79,7 +79,10 @@ export default function Home() {
 
       router.push({
         pathname: "/result",
-        params: toResultParams(outcome.result),
+        params: {
+          ...toResultParams(outcome.result),
+          returnTo: "home",
+        },
       });
     } catch (error) {
       console.error("Analysis error:", error);
@@ -94,7 +97,7 @@ export default function Home() {
   };
 
   const handleTranspose = () => {
-    router.push("/(tabs)/transpose");
+    router.push("/transpose");
   };
 
   return (

@@ -69,7 +69,7 @@ export default function Transpose() {
     } else if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace("/(tabs)/home");
+      router.replace("/home");
     }
   }, [showBackButton, router, resultParams]);
 
@@ -97,6 +97,7 @@ export default function Transpose() {
       params: {
         originalKey,
         targetKey,
+        returnTo: "transpose",
       },
     });
   }, [router, originalKey, targetKey]);

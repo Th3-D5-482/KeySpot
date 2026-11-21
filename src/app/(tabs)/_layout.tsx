@@ -19,7 +19,6 @@ export default function TabsLayout() {
         },
 
         tabBarStyle: {
-          position: "absolute",
           backgroundColor: "#171B23",
           borderTopColor: "#293241",
           borderTopWidth: 1,
@@ -91,6 +90,16 @@ export default function TabsLayout() {
         }}
       />
 
+      <Tabs.Screen name="result" options={{
+        tabBarItemStyle: {
+          display: "none"
+        }
+      }} />
+      <Tabs.Screen name="outcome" options={{
+        tabBarItemStyle: {
+          display: "none"
+        }
+      }} />
     </Tabs>
   );
 }

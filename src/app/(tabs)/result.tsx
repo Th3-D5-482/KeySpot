@@ -1,35 +1,10 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import { parseResultParams } from "@/components/features/detection";
 import { ResultContent } from "@/components/result/ResultContent";
 import { Screen } from "@/components/Screen";
-
-const firstValue = (value: unknown) =>
-  Array.isArray(value) ? value[0] : value;
-
-const parseValue = (value: unknown) => {
-  const first = firstValue(value);
-  if (typeof first !== "string") return first;
-
-  try {
-    return JSON.parse(first);
-  } catch {
-    return first;
-  }
-};
-
-const parseResultParams = (params: Record<string, unknown>) => {
-  const confidence = firstValue(params.confidence);
-
-  return {
-    detectedKey: firstValue(params.detectedKey),
-    detectedMode: firstValue(params.mode),
-    confidenceValue:
-      confidence === undefined ? "" : String(confidence),
-    detectedChords: parseValue(params.chords),
-    diatonicChords: parseValue(params.diatonic),
-  };
-};
+import { useCallback } from "react";
 
 export default function Result() {
   const router = useRouter();
@@ -43,16 +18,25 @@ export default function Result() {
     diatonicChords,
   } = parseResultParams(params);
 
-  const backFunction = () => router.back();
+  const backFunction = useCallback(() => {
+    router.replace("/home");
+  }, [router]);
 
   const handleDetectAnother = () => {
-    router.replace("/(tabs)/home");
+    router.replace("/home");
   };
 
   const handleTranspose = () => {
     router.push({
-      pathname: "/(tabs)/transpose",
+      pathname: "/outcome",
       params: {
+        originalKey:
+          typeof params.detectedKey === "string"
+            ? params.detectedKey
+            : Array.isArray(params.detectedKey)
+              ? params.detectedKey[0]
+              : "C",
+        targetKey: "A",
         returnTo: "result",
         detectedKey: params.detectedKey,
         mode: params.mode,

@@ -15,7 +15,7 @@ export function useBackFunction(
     } else if (onNoHistory) {
       onNoHistory();
     } else {
-      router.replace("/(tabs)/home");
+      router.replace("/home");
     }
   }, [onBack, onNoHistory, router]);
 }
