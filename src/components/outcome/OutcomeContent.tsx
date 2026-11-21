@@ -1,6 +1,7 @@
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { Header } from "../Header";
 import { RelativeChords } from "../RelativeChords";
@@ -28,10 +29,15 @@ export const OutcomeContent = ({
   getGuitarOptions,
   getOrdinalSuffix,
 }: OutcomeContentProps) => {
+  const [selectedGuitarOption, setSelectedGuitarOption] =
+    useState<GuitarOption | null>(null);
   const forwardSemitones = getSemitones?.(originalKey, targetKey) ?? null;
   const reverseSemitones = getSemitones?.(targetKey, originalKey) ?? null;
 
   const guitarOptions = getGuitarOptions?.(targetKey) ?? [];
+  const capoLabel = selectedGuitarOption
+    ? `Capo ${selectedGuitarOption.fret}${getOrdinalSuffix?.(selectedGuitarOption.fret) ?? ""}`
+    : undefined;
 
   return (
     <ScrollView
@@ -220,33 +226,58 @@ export const OutcomeContent = ({
 
             {guitarOptions.length > 0 ? (
               <View className="mt-5 gap-2.5">
-                {guitarOptions.map((option) => (
-                  <View
-                    key={`${option.shapeKey}-${option.fret}`}
-                    className="flex-row items-center justify-between rounded-2xl border border-[#3C3424] bg-[#202019] px-4 py-4"
-                  >
-                    <View>
-                      <Text className="text-[19px] font-extrabold text-white">
-                        {option.shapeKey}
-                      </Text>
+                {guitarOptions.map((option) => {
+                  const isSelected =
+                    selectedGuitarOption?.fret === option.fret &&
+                    selectedGuitarOption.shapeKey === option.shapeKey;
 
-                      <Text className="mt-1 text-[11px] text-[#8491A5]">
-                        Chord shape
-                      </Text>
-                    </View>
+                  return (
+                    <Pressable
+                      key={`${option.shapeKey}-${option.fret}`}
+                      onPress={() =>
+                        setSelectedGuitarOption((selectedOption) =>
+                          selectedOption?.fret === option.fret &&
+                          selectedOption.shapeKey === option.shapeKey
+                            ? null
+                            : option
+                        )
+                      }
+                      accessibilityRole="button"
+                      accessibilityLabel={`Use ${option.shapeKey} chord shapes with capo at fret ${option.fret}`}
+                      accessibilityState={{ selected: isSelected }}
+                      className={`flex-row items-center justify-between rounded-2xl border px-4 py-4 ${
+                        isSelected
+                          ? "border-[#FBBF24] bg-[#2D291C]"
+                          : "border-[#3C3424] bg-[#202019]"
+                      }`}
+                    >
+                      <View className="flex-row items-center gap-2">
+                        <Text className="text-[19px] font-extrabold text-white">
+                          {option.shapeKey}
+                        </Text>
 
-                    <View className="items-end">
-                      <Text className="text-[15px] font-extrabold text-[#FBBF24]">
-                        Capo {option.fret}
-                        {getOrdinalSuffix?.(option.fret) ?? ""}
-                      </Text>
+                        {isSelected && (
+                          <MaterialCommunityIcons
+                            name="check-circle"
+                            size={18}
+                            color="#FBBF24"
+                          />
+                        )}
+                      </View>
 
-                      <Text className="mt-1 text-[11px] text-[#8491A5]">
-                        Fret position
-                      </Text>
-                    </View>
-                  </View>
-                ))}
+                      <View className="items-end">
+                        <Text className="text-[15px] font-extrabold text-[#FBBF24]">
+                          Capo {option.fret}
+                          {getOrdinalSuffix?.(option.fret) ?? ""}
+                        </Text>
+
+                        <Text className="mt-1 text-[11px] text-[#8491A5]">
+                          Fret position
+                        </Text>
+                      </View>
+                    </Pressable>
+                  );
+                })}
               </View>
             ) : (
               <Text className="mt-4 text-[12px] text-[#8491A5]">
@@ -265,20 +296,22 @@ export const OutcomeContent = ({
             </Text>
 
             <Text className="mt-1.5 text-[13px] leading-5 text-[#8491A5]">
-              Compare chord progressions across keys.
+              {selectedGuitarOption
+                ? `Compare ${selectedGuitarOption.shapeKey} chord shapes with the target key.`
+                : "Select a capo option to compare its chord shapes with the target key."}
             </Text>
           </View>
 
           <View className="flex-row gap-3">
             <RelativeChords
-              title={`Key of ${originalKey ?? "N/A"}`}
-              subtitle="Original"
-              rootKey={originalKey ?? ""}
+              title={`Key of ${selectedGuitarOption?.shapeKey ?? originalKey ?? "N/A"}`}
+              subtitle={selectedGuitarOption ? "Guitar Shape" : "Original"}
+              rootKey={selectedGuitarOption?.shapeKey ?? originalKey ?? ""}
             />
 
             <RelativeChords
               title={`Key of ${targetKey ?? "N/A"}`}
-              subtitle="Target"
+              subtitle={capoLabel ? `Target · ${capoLabel}` : "Target"}
               rootKey={targetKey ?? ""}
               forwardSemitones={forwardSemitones}
               reverseSemitones={reverseSemitones}
