@@ -1,13 +1,40 @@
+
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { parseResultParams } from "@/components/features/detection";
 import { ResultContent } from "@/components/result/ResultContent";
 import { Screen } from "@/components/Screen";
-import { useBackFunction } from "@/hooks/useBackFunction";
+
+const firstValue = (value: unknown) =>
+  Array.isArray(value) ? value[0] : value;
+
+const parseValue = (value: unknown) => {
+  const first = firstValue(value);
+  if (typeof first !== "string") return first;
+
+  try {
+    return JSON.parse(first);
+  } catch {
+    return first;
+  }
+};
+
+const parseResultParams = (params: Record<string, unknown>) => {
+  const confidence = firstValue(params.confidence);
+
+  return {
+    detectedKey: firstValue(params.detectedKey),
+    detectedMode: firstValue(params.mode),
+    confidenceValue:
+      confidence === undefined ? "" : String(confidence),
+    detectedChords: parseValue(params.chords),
+    diatonicChords: parseValue(params.diatonic),
+  };
+};
 
 export default function Result() {
   const router = useRouter();
   const params = useLocalSearchParams();
+
   const {
     detectedKey,
     detectedMode,
@@ -15,13 +42,14 @@ export default function Result() {
     detectedChords,
     diatonicChords,
   } = parseResultParams(params);
-  const backFunction = useBackFunction();
 
-  const DetectAnotherFunction = () => {
+  const backFunction = () => router.back();
+
+  const handleDetectAnother = () => {
     router.replace("/(tabs)/home");
   };
 
-  const TransposeFunction = () => {
+  const handleTranspose = () => {
     router.push({
       pathname: "/(tabs)/transpose",
       params: {
@@ -45,8 +73,8 @@ export default function Result() {
         confidenceValue={confidenceValue}
         diatonicChords={diatonicChords}
         detectedChords={detectedChords}
-        onDetectAnother={DetectAnotherFunction}
-        onTranpose={TransposeFunction}
+        onDetectAnother={handleDetectAnother}
+        onTranpose={handleTranspose}
         onBack={backFunction}
       />
     </Screen>

@@ -1,3 +1,4 @@
+
 import type { ReactNode } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -8,7 +9,11 @@ type ScreenProps = {
 
 export const Screen = ({
   children,
-  className = "flex-1 bg-black",
+  className = "flex-1 bg-[#0B0D12] px-5",
 }: ScreenProps) => {
-  return <SafeAreaView className={className}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView className={className}>
+      {children}
+    </SafeAreaView>
+  );
 };

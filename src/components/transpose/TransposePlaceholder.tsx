@@ -1,4 +1,6 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
+
 import { ChordsDropDown } from "../ChordsDropDown";
 import { Footer } from "../Footer";
 import { Header } from "../Header";
@@ -25,73 +27,151 @@ export const TransposePlaceholder = ({
   onCalculate,
 }: TransposePlaceholderProps) => {
   return (
-    <View className="flex-1 bg-black px-5 py-5">
+    <View className="flex-1 bg-[#0B0D12] px-5 pt-5 pb-3">
 
-      {/* Header */}
+      {/* HEADER */}
+
       <Header
         title="TRANSPOSE"
         showBackButton={showBackButton}
         onBackFunction={onBackFunction}
       />
 
-      {/* Main Content */}
-      <View className="flex-1 mt-8 justify-center">
-        <View className="w-full rounded-[32px] border border-gray-800 bg-[#080808] px-6 py-9">
+      {/* MAIN CONTENT */}
 
-          {/* Title */}
+      <View className="flex-1 justify-center">
+
+        <View className="rounded-[28px] border border-[#293241] bg-[#171B23] px-5 py-7">
+
+          {/* ICON */}
+
           <View className="items-center">
-            <Text className="text-white text-4xl font-bold text-center">
+
+            <View className="h-[68px] w-[68px] rounded-[22px] bg-[#12251F] border border-[#23473A] items-center justify-center">
+              <MaterialCommunityIcons
+                name="music-clef-treble"
+                size={34}
+                color="#34D399"
+              />
+            </View>
+
+          </View>
+
+          {/* TITLE */}
+
+          <View className="mt-5 items-center">
+
+            <Text className="text-white text-[28px] font-extrabold tracking-tight text-center">
               Transpose
             </Text>
 
-            <Text className="text-gray-500 text-base text-center mt-3 leading-6">
+            <Text className="text-[#8491A5] text-[14px] text-center mt-2 leading-5">
               Change the key of your music.
             </Text>
 
-            <Text className="text-gray-600 text-sm text-center mt-1 leading-5">
-              Select your original and target keys
-              {"\n"}to find the difference.
+            <Text className="text-[#64748B] text-[13px] text-center mt-2 leading-5">
+              Select your original and target keys{"\n"}
+              to calculate the transposition.
             </Text>
+
           </View>
 
-          {/* Key Selectors */}
-          <View className="mt-9">
-            <Text className="text-gray-400 text-xs font-semibold tracking-widest mb-1">
-              ORIGINAL KEY
-            </Text>
+          {/* KEY SELECTION */}
 
-            <ChordsDropDown
-              originalKey={originalKey}
-              setOriginalKey={(key) => setOriginalKey(key.toString())}
-              musicalKeys={musicalKeys}
-            />
+          <View className="mt-8">
 
-            <Text className="text-gray-400 text-xs font-semibold tracking-widest mt-7 mb-1">
-              TARGET KEY
-            </Text>
+            {/* ORIGINAL KEY */}
 
-            <ChordsDropDown
-              originalKey={targetKey}
-              setOriginalKey={(key) => setTargetKey(key.toString())}
-              musicalKeys={musicalKeys}
-            />
+            <View>
+
+              <View className="flex-row items-center gap-2 mb-2">
+                <MaterialCommunityIcons
+                  name="music"
+                  size={16}
+                  color="#8B9BB4"
+                />
+
+                <Text className="text-[#A7B2C3] text-[11px] font-bold tracking-[1.5px]">
+                  ORIGINAL KEY
+                </Text>
+              </View>
+
+              <ChordsDropDown
+                originalKey={originalKey}
+                setOriginalKey={(key) => setOriginalKey(key.toString())}
+                musicalKeys={musicalKeys}
+                title="Select Original Key"
+              />
+
+            </View>
+
+            {/* TRANSITION ICON */}
+
+            <View className="items-center my-3">
+
+              <View className="h-9 w-9 rounded-full border border-[#293241] bg-[#202632] items-center justify-center">
+                <MaterialCommunityIcons
+                  name="arrow-down"
+                  size={18}
+                  color="#8491A5"
+                />
+              </View>
+
+            </View>
+
+            {/* TARGET KEY */}
+
+            <View>
+
+              <View className="flex-row items-center gap-2 mb-2">
+                <MaterialCommunityIcons
+                  name="music-note"
+                  size={16}
+                  color="#8B9BB4"
+                />
+
+                <Text className="text-[#A7B2C3] text-[11px] font-bold tracking-[1.5px]">
+                  TARGET KEY
+                </Text>
+              </View>
+
+              <ChordsDropDown
+                originalKey={targetKey}
+                setOriginalKey={(key) => setTargetKey(key.toString())}
+                musicalKeys={musicalKeys}
+                title="Select Target Key"
+              />
+
+            </View>
+
           </View>
 
-          {/* Calculate Button */}
+          {/* CALCULATE BUTTON */}
+
           <TouchableOpacity
-            activeOpacity={0.85}
+            activeOpacity={0.8}
             onPress={onCalculate}
-            className="w-full mt-9 h-16 rounded-2xl bg-white items-center justify-center"
+            className="mt-8 h-[58px] w-full flex-row items-center justify-center gap-2 rounded-2xl bg-[#34D399]"
           >
-            <Text className="text-black text-base font-bold">
-              Calculate
+
+            <Text className="text-[#071711] text-[15px] font-extrabold">
+              Calculate Transposition
             </Text>
+
+            <MaterialCommunityIcons
+              name="arrow-right"
+              size={20}
+              color="#071711"
+            />
+
           </TouchableOpacity>
 
         </View>
+
       </View>
 
-      {/* Footer */}
+      {/* FOOTER */}
+
       <Footer />
 
     </View>

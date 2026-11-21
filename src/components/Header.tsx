@@ -1,49 +1,57 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Text, TouchableOpacity, View } from 'react-native';
+
+import { Ionicons } from "@expo/vector-icons";
+import { Text, TouchableOpacity, View } from "react-native";
 
 type HeaderProps = {
-    title: string;
-    showBackButton: boolean;
-    onBackFunction?: () => void;
+  title: string;
+  showBackButton: boolean;
+  onBackFunction?: () => void;
 };
 
-export const Header = ({ title, showBackButton, onBackFunction }: HeaderProps) => {
-    return (
-        <>
-            {showBackButton ? (
-                <View className="flex-row items-center px-1 pt-7">
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="w-10 h-10 items-center justify-center rounded-full bg-[#111111]"
-                        onPress={onBackFunction}
-                    >
-                        <Ionicons
-                            name="arrow-back"
-                            size={20}
-                            color="#FFFFFF"
-                        />
-                    </TouchableOpacity>
-                    <View className="ml-4">
-                        <Text className="text-white text-3xl font-bold tracking-tight">
-                            KeySpot
-                        </Text>
+export const Header = ({
+  title,
+  showBackButton,
+  onBackFunction,
+}: HeaderProps) => {
+  return (
+    <View className="flex-row items-center min-h-[64px]">
 
-                        <Text className="text-gray-500 text-xs font-medium mt-1 tracking-widest">
-                            TRANSPOSE
-                        </Text>
-                    </View>
-                </View>
-            ) : (
-                <View className="pt-7">
-                    <Text className="text-white text-3xl font-bold tracking-tight">
-                        KeySpot
-                    </Text>
+      {/* BACK BUTTON */}
 
-                    <Text className="text-gray-500 text-xs font-medium mt-1 tracking-widest">
-                        {title}
-                    </Text>
-                </View>
-            )}
-        </>
-    );
+      {showBackButton && (
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={onBackFunction}
+          className="h-11 w-11 items-center justify-center rounded-2xl border border-[#293241] bg-[#171B23] mr-3"
+        >
+          <Ionicons
+            name="arrow-back"
+            size={21}
+            color="#E2E8F0"
+          />
+        </TouchableOpacity>
+      )}
+
+      {/* BRANDING */}
+
+      <View className="flex-1 justify-center">
+
+        <View className="flex-row items-center gap-2">
+
+          <Text className="text-white text-[25px] font-extrabold tracking-tight">
+            KeySpot
+          </Text>
+
+          <View className="h-2 w-2 rounded-full bg-[#34D399]" />
+
+        </View>
+
+        <Text className="text-[#8491A5] text-[10px] font-bold tracking-[2px] mt-1">
+          {title.toUpperCase()}
+        </Text>
+
+      </View>
+
+    </View>
+  );
 };

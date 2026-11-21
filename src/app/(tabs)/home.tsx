@@ -1,4 +1,8 @@
-import { toResultParams, useListenAndDetect } from "@/components/features/detection";
+
+import {
+  toResultParams,
+  useListenAndDetect,
+} from "@/components/features/detection";
 import { ListenPanel } from "@/components/home/ListenPanel";
 import { Screen } from "@/components/Screen";
 import { useRouter } from "expo-router";
@@ -7,7 +11,9 @@ import { Alert, Animated } from "react-native";
 
 export default function Home() {
   const router = useRouter();
-  const { isListening, requestPermissionAndListen } = useListenAndDetect();
+
+  const { isListening, requestPermissionAndListen } =
+    useListenAndDetect();
 
   const firstPulse = useRef(new Animated.Value(0)).current;
   const secondPulse = useRef(new Animated.Value(0)).current;
@@ -72,11 +78,12 @@ export default function Home() {
       }
 
       router.push({
-        pathname: "/(tabs)/result",
+        pathname: "/result",
         params: toResultParams(outcome.result),
       });
     } catch (error) {
       console.error("Analysis error:", error);
+
       Alert.alert(
         "Analysis Error",
         error instanceof Error
@@ -87,12 +94,13 @@ export default function Home() {
   };
 
   const handleTranspose = () => {
-    router.push('/(tabs)/transpose');
-  }
+    router.push("/(tabs)/transpose");
+  };
 
   return (
     <Screen>
-      <ListenPanel isListening={isListening}
+      <ListenPanel
+        isListening={isListening}
         onListen={handleListen}
         onTranspose={handleTranspose}
         firstPulse={firstPulse}

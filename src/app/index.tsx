@@ -1,3 +1,4 @@
+
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 
@@ -11,7 +12,9 @@ export default function Index() {
       router.replace("/(tabs)/home");
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [router]);
 
   return <SplashScreen />;

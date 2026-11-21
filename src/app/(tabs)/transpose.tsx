@@ -14,6 +14,7 @@ import { BackHandler } from "react-native";
 export default function Transpose() {
   const router = useRouter();
   const isFocused = useIsFocused();
+
   const {
     returnTo,
     detectedKey,
@@ -24,8 +25,10 @@ export default function Transpose() {
     progression,
     diatonic,
   } = useLocalSearchParams();
+
   const [originalKey, setOriginalKey] = useState("C");
   const [targetKey, setTargetKey] = useState("A");
+
   const showBackButton = isFocused && returnTo === "result";
 
   const resultParams = useMemo(
@@ -51,9 +54,7 @@ export default function Transpose() {
 
   useFocusEffect(
     useCallback(() => {
-      if (returnTo !== "result") {
-        return;
-      }
+      if (returnTo !== "result") return;
 
       return () => router.setParams({ returnTo: undefined });
     }, [returnTo, router])
@@ -62,20 +63,21 @@ export default function Transpose() {
   const navigateBack = useCallback(() => {
     if (showBackButton) {
       router.replace({
-        pathname: "/(tabs)/result",
+        pathname: "/result",
         params: resultParams,
       });
-    } else {
+    } else if (router.canGoBack()) {
       router.back();
+    } else {
+      router.replace("/(tabs)/home");
     }
   }, [showBackButton, router, resultParams]);
+
   const backFunction = useBackFunction(navigateBack);
 
   useFocusEffect(
     useCallback(() => {
-      if (!showBackButton) {
-        return;
-      }
+      if (!showBackButton) return;
 
       const subscription = BackHandler.addEventListener(
         "hardwareBackPress",
@@ -89,15 +91,15 @@ export default function Transpose() {
     }, [showBackButton, backFunction])
   );
 
-  const onCalculate = () => {
+  const onCalculate = useCallback(() => {
     router.push({
-      pathname: "/(tabs)/outcome",
+      pathname: "/outcome",
       params: {
         originalKey,
         targetKey,
       },
     });
-  };
+  }, [router, originalKey, targetKey]);
 
   return (
     <Screen>
