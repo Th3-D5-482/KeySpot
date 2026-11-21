@@ -9,6 +9,15 @@ import {
 } from "./constants";
 import type { ChordObservation, ChordQuality, MusicalMode } from "./types";
 
+const formatChordLabel = (root: number, quality: ChordQuality) => {
+  const suffix = quality === "minor" ? "m" : "";
+
+  return NOTE_NAMES[root]
+    .split(" / ")
+    .map((note) => `${note}${suffix}`)
+    .join(" / ");
+};
+
 export const getDiatonicChords = (key: number, mode: MusicalMode) => {
   if (mode === "Major") {
     const intervals = [0, 2, 4, 5, 7, 9, 11];
@@ -26,11 +35,10 @@ export const getDiatonicChords = (key: number, mode: MusicalMode) => {
     return intervals.map((interval, index) => {
       const root = (key + interval) % 12;
       const quality = qualities[index];
-      const suffix = quality === "minor" ? "m" : "";
 
       return {
         degree: romans[index],
-        label: NOTE_NAMES[root] + suffix,
+        label: formatChordLabel(root, quality),
       };
     });
   }
@@ -51,11 +59,10 @@ export const getDiatonicChords = (key: number, mode: MusicalMode) => {
   return intervals.map((interval, index) => {
     const root = (relativeMajorKey + interval) % 12;
     const quality = qualities[index];
-    const suffix = quality === "minor" ? "m" : "";
 
     return {
       degree: romans[index],
-      label: NOTE_NAMES[root] + suffix,
+      label: formatChordLabel(root, quality),
     };
   });
 };
