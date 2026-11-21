@@ -14,19 +14,21 @@ export const Header = ({
   onBackFunction,
 }: HeaderProps) => {
   return (
-    <View className="flex-row items-center min-h-[64px]">
+    <View className="flex-row items-center min-h-[72px] mb-2">
 
       {/* BACK BUTTON */}
 
       {showBackButton && (
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={0.75}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
           onPress={onBackFunction}
-          className="h-11 w-11 items-center justify-center rounded-2xl border border-[#293241] bg-[#171B23] mr-3"
+          className="h-12 w-12 items-center justify-center rounded-2xl border border-[#252D3A] bg-[#151922] mr-4"
         >
           <Ionicons
-            name="arrow-back"
-            size={21}
+            name="chevron-back"
+            size={22}
             color="#E2E8F0"
           />
         </TouchableOpacity>
@@ -36,17 +38,17 @@ export const Header = ({
 
       <View className="flex-1 justify-center">
 
-        <View className="flex-row items-center gap-2">
+        <View className="flex-row items-center">
 
-          <Text className="text-white text-[25px] font-extrabold tracking-tight">
+          <Text className="text-[#F8FAFC] text-[26px] font-extrabold tracking-[-0.8px]">
             KeySpot
           </Text>
 
-          <View className="h-2 w-2 rounded-full bg-[#34D399]" />
+          <View className="h-[7px] w-[7px] rounded-full bg-[#34D399] ml-2 mt-2" />
 
         </View>
 
-        <Text className="text-[#8491A5] text-[10px] font-bold tracking-[2px] mt-1">
+        <Text className="text-[#8491A5] text-[10px] font-semibold tracking-[2.2px] mt-[5px]">
           {title.toUpperCase()}
         </Text>
 

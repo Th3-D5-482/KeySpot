@@ -1,3 +1,4 @@
+
 import { Text, View } from "react-native";
 
 import { NOTE_NAMES } from "./features/detection/constants";
@@ -24,54 +25,58 @@ export const RelativeChords = ({
       : getDiatonicChords(keyIndex, "Major").slice(0, 6);
 
   return (
-    <View className="flex-1 rounded-[22px] border border-[#2A3444] bg-[#171B23] px-3.5 py-4">
+    <View className="flex-1 rounded-[22px] border border-[#252D3A] bg-[#151922] px-3 py-4">
 
       {/* CARD HEADER */}
 
       <View className="mb-4">
         <Text
-          className="text-white text-[15px] font-extrabold tracking-tight"
+          className="text-[14px] font-extrabold tracking-tight text-white"
           numberOfLines={1}
         >
           {title}
         </Text>
 
-        <Text className="text-[10px] font-bold uppercase tracking-[1.5px] text-[#8491A5] mt-1">
-          {subtitle}
-        </Text>
+        <View className="mt-2 self-start rounded-md border border-[#285B4B] bg-[#14251F] px-2 py-1">
+          <Text className="text-[9px] font-extrabold uppercase tracking-[1.5px] text-[#34D399]">
+            {subtitle}
+          </Text>
+        </View>
       </View>
 
       {/* DIVIDER */}
 
-      <View className="h-px bg-[#293241] mb-3" />
+      <View className="mb-3 h-px bg-[#252D3A]" />
 
       {/* CHORD LIST */}
 
-      <View className="gap-1.5">
-
-        {chords.map((item, index) => (
-
+      <View className="gap-2">
+        {chords.map((item) => (
           <View
             key={item.degree}
-            className="flex-row items-center rounded-xl bg-[#202632] px-2.5 py-3"
+            className="min-h-[48px] flex-row items-center rounded-xl border border-[#252D3A] bg-[#202632] px-2.5 py-2"
           >
-
-            <View className="w-9">
-              <Text className="text-[12px] font-bold text-[#8491A5]">
+            <View className="w-8">
+              <Text className="text-[11px] font-bold text-[#8491A5]">
                 {item.degree}
               </Text>
             </View>
 
-            <Text className="text-[15px] font-extrabold text-white flex-1">
+            <Text
+              className="flex-1 text-center text-[15px] font-extrabold text-white"
+              numberOfLines={1}
+            >
               {item.label}
             </Text>
-
           </View>
-
         ))}
-
       </View>
 
+      {chords.length === 0 && (
+        <Text className="py-4 text-center text-[11px] text-[#8491A5]">
+          No chords available.
+        </Text>
+      )}
     </View>
   );
 };

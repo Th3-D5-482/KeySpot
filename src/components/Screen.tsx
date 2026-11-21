@@ -9,10 +9,13 @@ type ScreenProps = {
 
 export const Screen = ({
   children,
-  className = "flex-1 bg-[#0B0D12] px-5",
+  className = "flex-1 bg-[#0F1117] px-5",
 }: ScreenProps) => {
   return (
-    <SafeAreaView className={className}>
+    <SafeAreaView
+      edges={["top", "bottom"]}
+      className={className}
+    >
       {children}
     </SafeAreaView>
   );

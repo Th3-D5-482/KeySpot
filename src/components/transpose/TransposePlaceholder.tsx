@@ -1,3 +1,4 @@
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -27,7 +28,7 @@ export const TransposePlaceholder = ({
   onCalculate,
 }: TransposePlaceholderProps) => {
   return (
-    <View className="flex-1 bg-[#0B0D12] px-5 pt-5 pb-3">
+    <View className="flex-1 pt-2">
 
       {/* HEADER */}
 
@@ -41,35 +42,39 @@ export const TransposePlaceholder = ({
 
       <View className="flex-1 justify-center">
 
-        <View className="rounded-[28px] border border-[#293241] bg-[#171B23] px-5 py-7">
+        {/* TRANSPOSE CARD */}
+
+        <View className="rounded-[28px] border border-[#252D3A] bg-[#151922] px-5 py-7">
 
           {/* ICON */}
 
           <View className="items-center">
 
-            <View className="h-[68px] w-[68px] rounded-[22px] bg-[#12251F] border border-[#23473A] items-center justify-center">
+            <View className="h-[62px] w-[62px] items-center justify-center rounded-[20px] border border-[#285B4B] bg-[#14251F]">
+
               <MaterialCommunityIcons
                 name="music-clef-treble"
-                size={34}
+                size={31}
                 color="#34D399"
               />
+
             </View>
 
           </View>
 
-          {/* TITLE */}
+          {/* INTRODUCTION */}
 
           <View className="mt-5 items-center">
 
-            <Text className="text-white text-[28px] font-extrabold tracking-tight text-center">
+            <Text className="text-[#F8FAFC] text-[27px] font-extrabold tracking-[-0.8px] text-center">
               Transpose
             </Text>
 
-            <Text className="text-[#8491A5] text-[14px] text-center mt-2 leading-5">
+            <Text className="text-[#8491A5] text-[13px] font-medium text-center mt-2">
               Change the key of your music.
             </Text>
 
-            <Text className="text-[#64748B] text-[13px] text-center mt-2 leading-5">
+            <Text className="text-[#64748B] text-[12px] text-center mt-2 leading-5">
               Select your original and target keys{"\n"}
               to calculate the transposition.
             </Text>
@@ -78,22 +83,24 @@ export const TransposePlaceholder = ({
 
           {/* KEY SELECTION */}
 
-          <View className="mt-8">
+          <View className="mt-7">
 
             {/* ORIGINAL KEY */}
 
             <View>
 
-              <View className="flex-row items-center gap-2 mb-2">
+              <View className="flex-row items-center mb-2.5">
+
                 <MaterialCommunityIcons
-                  name="music"
+                  name="music-note"
                   size={16}
-                  color="#8B9BB4"
+                  color="#8491A5"
                 />
 
-                <Text className="text-[#A7B2C3] text-[11px] font-bold tracking-[1.5px]">
+                <Text className="text-[#A7B2C3] text-[10px] font-bold tracking-[1.6px] ml-2">
                   ORIGINAL KEY
                 </Text>
+
               </View>
 
               <ChordsDropDown
@@ -105,16 +112,18 @@ export const TransposePlaceholder = ({
 
             </View>
 
-            {/* TRANSITION ICON */}
+            {/* TRANSITION INDICATOR */}
 
             <View className="items-center my-3">
 
-              <View className="h-9 w-9 rounded-full border border-[#293241] bg-[#202632] items-center justify-center">
+              <View className="h-9 w-9 items-center justify-center rounded-full border border-[#252D3A] bg-[#202632]">
+
                 <MaterialCommunityIcons
                   name="arrow-down"
-                  size={18}
+                  size={17}
                   color="#8491A5"
                 />
+
               </View>
 
             </View>
@@ -123,16 +132,18 @@ export const TransposePlaceholder = ({
 
             <View>
 
-              <View className="flex-row items-center gap-2 mb-2">
+              <View className="flex-row items-center mb-2.5">
+
                 <MaterialCommunityIcons
-                  name="music-note"
+                  name="music-note-eighth"
                   size={16}
-                  color="#8B9BB4"
+                  color="#8491A5"
                 />
 
-                <Text className="text-[#A7B2C3] text-[11px] font-bold tracking-[1.5px]">
+                <Text className="text-[#A7B2C3] text-[10px] font-bold tracking-[1.6px] ml-2">
                   TARGET KEY
                 </Text>
+
               </View>
 
               <ChordsDropDown
@@ -149,19 +160,21 @@ export const TransposePlaceholder = ({
           {/* CALCULATE BUTTON */}
 
           <TouchableOpacity
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={onCalculate}
-            className="mt-8 h-[58px] w-full flex-row items-center justify-center gap-2 rounded-2xl bg-[#34D399]"
+            accessibilityRole="button"
+            className="h-[56px] w-full flex-row items-center justify-center rounded-2xl bg-[#34D399] mt-7"
           >
 
-            <Text className="text-[#071711] text-[15px] font-extrabold">
+            <Text className="text-[#0F1117] text-[14px] font-extrabold">
               Calculate Transposition
             </Text>
 
             <MaterialCommunityIcons
               name="arrow-right"
               size={20}
-              color="#071711"
+              color="#0F1117"
+              style={{ marginLeft: 9 }}
             />
 
           </TouchableOpacity>

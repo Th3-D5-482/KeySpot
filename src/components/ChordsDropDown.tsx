@@ -1,3 +1,4 @@
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
@@ -26,24 +27,28 @@ export const ChordsDropDown = ({
   return (
     <View className="w-full">
 
-      {/* SELECTOR */}
+      {/* KEY SELECTOR */}
 
       <Pressable
         onPress={() => setPickerVisible(true)}
-        className="h-[60px] w-full flex-row items-center justify-between rounded-2xl border border-[#293241] bg-[#202632] px-4 active:bg-[#252D3A]"
+        accessibilityRole="button"
+        accessibilityLabel={`${title}: ${originalKey}`}
+        className="h-[58px] w-full flex-row items-center justify-between rounded-2xl border border-[#252D3A] bg-[#202632] px-4 active:bg-[#252D3A]"
       >
 
-        <View className="flex-row items-center gap-3">
+        <View className="flex-row items-center">
 
-          <View className="h-9 w-9 items-center justify-center rounded-xl bg-[#171B23]">
+          <View className="h-9 w-9 items-center justify-center rounded-xl bg-[#151922]">
+
             <MaterialCommunityIcons
               name="music-note"
-              size={20}
-              color="#8B9BB4"
+              size={19}
+              color="#34D399"
             />
+
           </View>
 
-          <Text className="text-[17px] font-bold text-white">
+          <Text className="text-[#F8FAFC] text-[17px] font-bold ml-3">
             {originalKey}
           </Text>
 
@@ -51,7 +56,7 @@ export const ChordsDropDown = ({
 
         <MaterialCommunityIcons
           name="chevron-down"
-          size={24}
+          size={22}
           color="#8491A5"
         />
 
@@ -76,116 +81,125 @@ export const ChordsDropDown = ({
             className="absolute inset-0"
           />
 
-          {/* MODAL CARD */}
+          {/* MODAL CONTAINER */}
 
-          <View className="overflow-hidden rounded-[28px] border border-[#293241] bg-[#171B23]">
+          <View className="overflow-hidden rounded-[26px] border border-[#252D3A] bg-[#151922]">
 
             {/* MODAL HEADER */}
 
             <View className="flex-row items-center justify-between px-5 py-5">
 
-              <View>
-                <Text className="text-white text-[18px] font-extrabold">
+              <View className="flex-1">
+
+                <Text className="text-[#F8FAFC] text-[17px] font-extrabold">
                   {title}
                 </Text>
 
-                <Text className="text-[#8491A5] text-[13px] mt-1">
+                <Text className="text-[#8491A5] text-[12px] mt-1">
                   Choose a musical key
                 </Text>
+
               </View>
 
               <Pressable
                 onPress={() => setPickerVisible(false)}
-                className="h-9 w-9 rounded-full bg-[#202632] items-center justify-center"
+                accessibilityRole="button"
+                accessibilityLabel="Close key selector"
+                className="h-9 w-9 items-center justify-center rounded-xl border border-[#252D3A] bg-[#202632]"
               >
+
                 <MaterialCommunityIcons
                   name="close"
-                  size={20}
-                  color="#8491A5"
+                  size={19}
+                  color="#A7B2C3"
                 />
+
               </Pressable>
 
             </View>
 
             {/* DIVIDER */}
 
-            <View className="h-px bg-[#293241]" />
+            <View className="h-px bg-[#252D3A]" />
 
             {/* KEY OPTIONS */}
 
             <ScrollView
               showsVerticalScrollIndicator={false}
               className="max-h-[420px]"
+              contentContainerStyle={{
+                padding: 12,
+              }}
             >
 
-              <View className="p-3 gap-1">
+              {musicalKeys.map((key) => {
+                const isSelected = originalKey === key;
 
-                {musicalKeys.map((key) => {
-                  const isSelected = originalKey === key;
+                return (
+                  <Pressable
+                    key={key}
+                    onPress={() => {
+                      setOriginalKey(key);
+                      setPickerVisible(false);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: isSelected }}
+                    className={`flex-row items-center justify-between rounded-xl px-4 py-3.5 mb-1.5 ${
+                      isSelected
+                        ? "border border-[#285B4B] bg-[#14251F]"
+                        : "border border-transparent bg-transparent"
+                    }`}
+                  >
 
-                  return (
-                    <Pressable
-                      key={key}
-                      onPress={() => {
-                        setOriginalKey(key);
-                        setPickerVisible(false);
-                      }}
-                      className={`flex-row items-center justify-between rounded-2xl px-4 py-4 ${
-                        isSelected
-                          ? "bg-[#12251F] border border-[#23473A]"
-                          : "bg-transparent"
-                      }`}
-                    >
+                    <View className="flex-row items-center">
 
-                      <View className="flex-row items-center gap-3">
+                      <View
+                        className={`h-10 w-10 items-center justify-center rounded-xl ${
+                          isSelected
+                            ? "bg-[#203D32]"
+                            : "bg-[#202632]"
+                        }`}
+                      >
 
-                        <View
-                          className={`h-10 w-10 items-center justify-center rounded-xl ${
-                            isSelected
-                              ? "bg-[#1B382E]"
-                              : "bg-[#202632]"
-                          }`}
-                        >
-                          <MaterialCommunityIcons
-                            name="music-note"
-                            size={20}
-                            color={isSelected ? "#34D399" : "#8491A5"}
-                          />
-                        </View>
-
-                        <Text
-                          className={`text-[16px] ${
-                            isSelected
-                              ? "font-extrabold text-white"
-                              : "font-medium text-[#A7B2C3]"
-                          }`}
-                        >
-                          {key}
-                        </Text>
+                        <MaterialCommunityIcons
+                          name="music-note"
+                          size={19}
+                          color={isSelected ? "#34D399" : "#8491A5"}
+                        />
 
                       </View>
 
-                      {isSelected && (
-                        <MaterialCommunityIcons
-                          name="check-circle"
-                          size={22}
-                          color="#34D399"
-                        />
-                      )}
+                      <Text
+                        className={`text-[15px] ml-3 ${
+                          isSelected
+                            ? "font-extrabold text-[#F8FAFC]"
+                            : "font-medium text-[#CBD5E1]"
+                        }`}
+                      >
+                        {key}
+                      </Text>
 
-                    </Pressable>
-                  );
-                })}
+                    </View>
 
-              </View>
+                    {isSelected && (
+                      <MaterialCommunityIcons
+                        name="check-circle"
+                        size={21}
+                        color="#34D399"
+                      />
+                    )}
+
+                  </Pressable>
+                );
+              })}
 
             </ScrollView>
 
-            {/* FOOTER */}
+            {/* MODAL FOOTER */}
 
-            <View className="border-t border-[#293241] px-5 py-4">
+            <View className="border-t border-[#252D3A] px-5 py-4">
 
-              <Text className="text-center text-[11px] font-semibold tracking-[1px] text-[#64748B]">
+              <Text className="text-center text-[#64748B] text-[10px] font-bold tracking-[1.5px]">
                 {musicalKeys.length} AVAILABLE KEYS
               </Text>
 

@@ -36,185 +36,252 @@ export const ResultContent = ({
   onBack,
 }: ResultContentProps) => {
   return (
-    <View className="flex-1 px-5">
+    <View className="flex-1">
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: 18,
-          paddingBottom: 36,
+          paddingTop: 8,
+          paddingBottom: 28,
         }}
       >
 
-        {/* Header */}
+        {/* HEADER */}
+
         <Header
           title="DETECTED KEY"
           showBackButton={true}
           onBackFunction={onBack}
         />
 
-        {/* Detected Key */}
-        <View className="w-full items-center rounded-[30px] border border-[#293241] bg-[#171B23] mt-7 px-5 py-9">
+        {/* DETECTED KEY CARD */}
 
-          <View className="flex-row items-center rounded-full bg-[#202632] border border-[#293241] px-3 py-1.5">
-            <View className="w-2 h-2 rounded-full bg-[#34D399] mr-2" />
+        <View className="w-full items-center rounded-[28px] border border-[#252D3A] bg-[#151922] mt-6 px-5 py-8">
 
-            <Text className="text-[#34D399] text-[10px] font-bold tracking-[1.5px]">
+          {/* STATUS LABEL */}
+
+          <View className="flex-row items-center rounded-full border border-[#285B4B] bg-[#14251F] px-3 py-2">
+
+            <View className="w-[7px] h-[7px] rounded-full bg-[#34D399] mr-2" />
+
+            <Text className="text-[#34D399] text-[10px] font-bold tracking-[1.6px]">
               KEY DETECTED
             </Text>
+
           </View>
 
-          <Text className="text-white text-[76px] font-extrabold tracking-tight mt-4">
+          {/* KEY */}
+
+          <Text className="text-[#F8FAFC] text-[76px] font-extrabold tracking-[-3px] mt-3">
             {detectedKey}
           </Text>
 
-          <Text className="text-[#A3AEC0] text-lg font-semibold mt-1">
+          <Text className="text-[#A3AEC0] text-[16px] font-semibold mt-[-2px]">
             {detectedMode}
           </Text>
 
-          {/* Confidence */}
-          <View className="w-full flex-row items-center justify-between border-t border-[#293241] mt-8 pt-5">
-            <View className="flex-row items-center">
-              <Ionicons
-                name="analytics-outline"
-                size={17}
-                color="#8491A5"
-              />
+          {/* CONFIDENCE */}
 
-              <Text className="text-[#8491A5] text-sm font-medium ml-2">
-                Analysis confidence
+          <View className="w-full border-t border-[#252D3A] mt-7 pt-5">
+
+            <View className="flex-row items-center justify-between">
+
+              <View className="flex-row items-center">
+
+                <Ionicons
+                  name="analytics-outline"
+                  size={18}
+                  color="#8491A5"
+                />
+
+                <Text className="text-[#8491A5] text-[13px] font-medium ml-2">
+                  Analysis confidence
+                </Text>
+
+              </View>
+
+              <Text className="text-[#34D399] text-[15px] font-bold">
+                {confidenceValue}%
               </Text>
+
             </View>
 
-            <Text className="text-[#34D399] text-base font-bold">
-              {confidenceValue}%
-            </Text>
           </View>
+
         </View>
 
-        {/* Transpose Action */}
+        {/* TRANSPOSE ACTION */}
+
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={onTranpose}
-          className="flex-row items-center rounded-[24px] border border-[#285B4B] bg-[#14251F] mt-5 px-5 py-5"
+          accessibilityRole="button"
+          className="flex-row items-center rounded-[20px] border border-[#285B4B] bg-[#14251F] mt-4 px-4 py-4"
         >
-          <View className="w-12 h-12 items-center justify-center rounded-2xl bg-[#203D32]">
+
+          <View className="w-11 h-11 items-center justify-center rounded-2xl bg-[#203D32]">
+
             <Ionicons
               name="swap-horizontal"
-              size={25}
+              size={23}
               color="#34D399"
             />
+
           </View>
 
-          <View className="flex-1 ml-4">
-            <Text className="text-white text-base font-bold">
+          <View className="flex-1 ml-3">
+
+            <Text className="text-[#F8FAFC] text-[14px] font-bold">
               Transpose this key
             </Text>
 
-            <Text className="text-[#8491A5] text-xs mt-1">
+            <Text className="text-[#8491A5] text-[11px] mt-1">
               Change the key to suit your needs
             </Text>
+
           </View>
 
           <Ionicons
             name="chevron-forward"
-            size={21}
+            size={20}
             color="#34D399"
           />
+
         </TouchableOpacity>
 
-        {/* Diatonic Chords */}
-        <View className="mt-9">
+        {/* DIATONIC CHORDS */}
+
+        <View className="mt-8">
+
+          {/* SECTION HEADER */}
 
           <View className="flex-row items-center">
-            <View className="w-9 h-9 rounded-xl bg-[#202632] items-center justify-center">
+
+            <View className="w-10 h-10 items-center justify-center rounded-xl border border-[#252D3A] bg-[#151922]">
+
               <Ionicons
                 name="musical-notes-outline"
                 size={19}
                 color="#34D399"
               />
+
             </View>
 
-            <Text className="text-white text-lg font-bold ml-3">
-              Chords in this key
-            </Text>
+            <View className="ml-3">
+
+              <Text className="text-[#F8FAFC] text-[16px] font-bold">
+                Chords in this key
+              </Text>
+
+              <Text className="text-[#8491A5] text-[11px] mt-1">
+                The diatonic chord family
+              </Text>
+
+            </View>
+
           </View>
 
-          <Text className="text-[#8491A5] text-sm leading-5 mt-3">
-            The diatonic chord family associated with the detected key.
-          </Text>
+          {/* CHORD GRID */}
 
           <View className="flex-row flex-wrap mt-4">
+
             {diatonicChords.map((item, index) => (
               <View
                 key={`${item.degree}-${item.chord}-${index}`}
-                className="min-w-[76px] items-center rounded-2xl border border-[#293241] bg-[#171B23] px-4 py-3 mr-2 mb-2"
+                className="w-[31%] min-h-[78px] items-center justify-center rounded-2xl border border-[#252D3A] bg-[#151922] mr-[2.3%] mb-2.5"
               >
-                <Text className="text-[#8491A5] text-[11px] font-semibold">
+
+                <Text className="text-[#8491A5] text-[10px] font-semibold tracking-wider">
                   {item.degree}
                 </Text>
 
-                <Text className="text-white text-lg font-extrabold mt-1">
+                <Text className="text-[#F8FAFC] text-[20px] font-extrabold mt-1">
                   {item.chord}
                 </Text>
+
               </View>
             ))}
+
           </View>
+
         </View>
 
-        {/* Detected Chords */}
-        <View className="mt-8">
+        {/* DETECTED CHORDS */}
+
+        <View className="mt-6">
+
+          {/* SECTION HEADER */}
 
           <View className="flex-row items-center">
-            <View className="w-9 h-9 rounded-xl bg-[#202632] items-center justify-center">
+
+            <View className="w-10 h-10 items-center justify-center rounded-xl border border-[#3C3424] bg-[#242019]">
+
               <Ionicons
                 name="ear-outline"
                 size={19}
-                color="#F59E0B"
+                color="#FBBF24"
               />
+
             </View>
 
-            <Text className="text-white text-lg font-bold ml-3">
-              Chords heard
-            </Text>
+            <View className="ml-3">
+
+              <Text className="text-[#F8FAFC] text-[16px] font-bold">
+                Chords heard
+              </Text>
+
+              <Text className="text-[#8491A5] text-[11px] mt-1">
+                Identified in your recording
+              </Text>
+
+            </View>
+
           </View>
 
-          <Text className="text-[#8491A5] text-sm leading-5 mt-3">
-            The strongest chord patterns identified in your recording.
-          </Text>
+          {/* DETECTED CHORD LIST */}
 
           <View className="flex-row flex-wrap mt-4">
+
             {detectedChords.map((chord, index) => (
               <View
                 key={`${chord}-${index}`}
-                className="rounded-xl border border-[#3C3424] bg-[#242019] px-4 py-3 mr-2 mb-2"
+                className="items-center justify-center rounded-xl border border-[#3C3424] bg-[#242019] px-4 py-3 mr-2.5 mb-2.5"
               >
-                <Text className="text-[#FBBF24] text-sm font-bold">
+
+                <Text className="text-[#FBBF24] text-[14px] font-bold">
                   {chord}
                 </Text>
+
               </View>
             ))}
+
           </View>
+
         </View>
 
-        {/* Detect Another Song */}
+        {/* DETECT ANOTHER SONG */}
+
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={0.85}
           onPress={onDetectAnother}
-          className="w-full flex-row items-center justify-center rounded-2xl bg-[#34D399] mt-10 py-4"
+          accessibilityRole="button"
+          className="w-full flex-row items-center justify-center rounded-2xl bg-[#34D399] mt-8 py-[17px]"
         >
+
           <Ionicons
             name="mic-outline"
             size={20}
-            color="#0B0D12"
+            color="#0F1117"
           />
 
-          <Text className="text-[#0B0D12] text-base font-extrabold ml-2">
+          <Text className="text-[#0F1117] text-[14px] font-extrabold ml-2">
             Detect Another Song
           </Text>
+
         </TouchableOpacity>
 
       </ScrollView>
+
     </View>
   );
 };

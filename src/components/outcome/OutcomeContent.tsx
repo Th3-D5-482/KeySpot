@@ -1,3 +1,4 @@
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView, Text, View } from "react-native";
 
@@ -35,9 +36,9 @@ export const OutcomeContent = ({
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 32 }}
+      contentContainerStyle={{ paddingBottom: 36 }}
     >
-      <View className="flex-1 px-5 pt-5">
+      <View className="flex-1 pt-2">
 
         {/* HEADER */}
 
@@ -49,23 +50,30 @@ export const OutcomeContent = ({
 
         {/* TRANSPOSITION RESULT */}
 
-        <View className="mt-7 rounded-[28px] border border-[#2A3444] bg-[#171B23] p-5">
+        <View className="mt-7 rounded-[28px] border border-[#252D3A] bg-[#151922] px-5 py-6">
 
-          <View className="flex-row items-center gap-2 mb-5">
-            <MaterialCommunityIcons
-              name="swap-horizontal"
-              size={20}
-              color="#8B9BB4"
-            />
+          <View className="mb-6 flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl border border-[#252D3A] bg-[#202632]">
+              <MaterialCommunityIcons
+                name="swap-horizontal"
+                size={21}
+                color="#34D399"
+              />
+            </View>
 
-            <Text className="text-[11px] font-bold tracking-[2px] text-[#8B9BB4]">
-              TRANSPOSITION
-            </Text>
+            <View className="flex-1">
+              <Text className="text-[13px] font-extrabold tracking-[1.5px] text-white">
+                TRANSPOSITION
+              </Text>
+              <Text className="mt-1 text-[11px] text-[#8491A5]">
+                Your key conversion breakdown
+              </Text>
+            </View>
           </View>
 
           {/* UPWARD TRANSPOSITION */}
 
-          <View className="rounded-2xl bg-[#12251F] border border-[#23473A] px-4 py-4">
+          <View className="rounded-[20px] border border-[#285B4B] bg-[#14251F] px-3 py-5">
             <TransposeValues
               originalKey={originalKey}
               targetKey={targetKey}
@@ -76,19 +84,19 @@ export const OutcomeContent = ({
 
           {/* DIVIDER */}
 
-          <View className="flex-row items-center my-5">
-            <View className="flex-1 h-px bg-[#293241]" />
+          <View className="my-5 flex-row items-center">
+            <View className="h-px flex-1 bg-[#252D3A]" />
 
-            <Text className="mx-3 text-[10px] font-bold tracking-[1.5px] text-[#64748B]">
+            <Text className="mx-4 text-[10px] font-bold tracking-[2px] text-[#64748B]">
               OR
             </Text>
 
-            <View className="flex-1 h-px bg-[#293241]" />
+            <View className="h-px flex-1 bg-[#252D3A]" />
           </View>
 
           {/* DOWNWARD TRANSPOSITION */}
 
-          <View className="rounded-2xl bg-[#292117] border border-[#51402A] px-4 py-4">
+          <View className="rounded-[20px] border border-[#51402A] bg-[#242019] px-3 py-5">
             <TransposeValues
               originalKey={originalKey}
               targetKey={targetKey}
@@ -96,175 +104,172 @@ export const OutcomeContent = ({
               semitones={reverseSemitones}
             />
           </View>
-
         </View>
 
         {/* INSTRUMENT GUIDE */}
 
-        <View className="mt-8 mb-5">
+        <View className="mt-8">
 
           <View className="mb-5">
             <Text className="text-[22px] font-extrabold tracking-tight text-white">
               Instrument Guide
             </Text>
 
-            <Text className="text-[13px] text-[#8491A5] mt-1">
+            <Text className="mt-1.5 text-[13px] leading-5 text-[#8491A5]">
               Apply the transposition to your instrument.
             </Text>
           </View>
 
-          <View className="rounded-[24px] border border-[#2A3444] bg-[#171B23] px-5 py-5">
+          <View className="rounded-[26px] border border-[#252D3A] bg-[#151922] px-5 py-5">
 
             {/* KEYBOARD */}
 
             <View className="flex-row items-start gap-3">
-
-              <View className="h-11 w-11 items-center justify-center rounded-xl bg-[#12251F] border border-[#23473A]">
+              <View className="h-12 w-12 items-center justify-center rounded-2xl border border-[#285B4B] bg-[#14251F]">
                 <MaterialCommunityIcons
                   name="piano"
-                  size={23}
+                  size={24}
                   color="#34D399"
                 />
               </View>
 
-              <View className="flex-1 pt-1">
-                <Text className="text-white text-[16px] font-bold">
+              <View className="flex-1 pt-0.5">
+                <Text className="text-[16px] font-bold text-white">
                   Keyboard
                 </Text>
 
-                <Text className="text-[#8491A5] text-[13px] mt-1">
-                  Transpose your keyboard by the required semitones.
+                <Text className="mt-1 text-[12px] leading-[19px] text-[#8491A5]">
+                  Adjust your keyboard transpose setting by the required semitones.
                 </Text>
               </View>
-
             </View>
 
-            <View className="flex-row gap-2 mt-4">
+            {/* KEYBOARD VALUES */}
 
-              <View className="flex-1 rounded-xl bg-[#12251F] border border-[#23473A] px-3 py-3">
-                <Text className="text-[#34D399] text-[11px] font-bold tracking-wider">
-                  UP
-                </Text>
+            <View className="mt-5 flex-row gap-3">
+              <View className="flex-1 rounded-2xl border border-[#285B4B] bg-[#14251F] px-4 py-4">
+                <View className="flex-row items-center gap-2">
+                  <MaterialCommunityIcons
+                    name="arrow-up"
+                    size={15}
+                    color="#34D399"
+                  />
+                  <Text className="text-[10px] font-extrabold tracking-[1.5px] text-[#34D399]">
+                    UP
+                  </Text>
+                </View>
 
-                <Text className="text-white text-[20px] font-extrabold mt-1">
+                <Text className="mt-2 text-[25px] font-extrabold text-white">
                   +{forwardSemitones ?? "N/A"}
                 </Text>
 
-                <Text className="text-[#8491A5] text-[11px] mt-1">
+                <Text className="mt-1 text-[11px] text-[#8491A5]">
                   Semitones
                 </Text>
               </View>
 
-              <View className="flex-1 rounded-xl bg-[#292117] border border-[#51402A] px-3 py-3">
-                <Text className="text-[#F59E0B] text-[11px] font-bold tracking-wider">
-                  DOWN
-                </Text>
+              <View className="flex-1 rounded-2xl border border-[#51402A] bg-[#242019] px-4 py-4">
+                <View className="flex-row items-center gap-2">
+                  <MaterialCommunityIcons
+                    name="arrow-down"
+                    size={15}
+                    color="#FBBF24"
+                  />
+                  <Text className="text-[10px] font-extrabold tracking-[1.5px] text-[#FBBF24]">
+                    DOWN
+                  </Text>
+                </View>
 
-                <Text className="text-white text-[20px] font-extrabold mt-1">
+                <Text className="mt-2 text-[25px] font-extrabold text-white">
                   -{reverseSemitones ?? "N/A"}
                 </Text>
 
-                <Text className="text-[#8491A5] text-[11px] mt-1">
+                <Text className="mt-1 text-[11px] text-[#8491A5]">
                   Semitones
                 </Text>
               </View>
-
             </View>
 
             {/* SEPARATOR */}
 
-            <View className="h-px bg-[#293241] my-5" />
+            <View className="my-6 h-px bg-[#252D3A]" />
 
             {/* GUITAR */}
 
             <View className="flex-row items-start gap-3">
-
-              <View className="h-11 w-11 items-center justify-center rounded-xl bg-[#292117] border border-[#51402A]">
+              <View className="h-12 w-12 items-center justify-center rounded-2xl border border-[#51402A] bg-[#242019]">
                 <MaterialCommunityIcons
                   name="guitar-acoustic"
-                  size={23}
-                  color="#F59E0B"
+                  size={24}
+                  color="#FBBF24"
                 />
               </View>
 
-              <View className="flex-1 pt-1">
-                <Text className="text-white text-[16px] font-bold">
+              <View className="flex-1 pt-0.5">
+                <Text className="text-[16px] font-bold text-white">
                   Guitar
                 </Text>
 
-                <Text className="text-[#8491A5] text-[13px] mt-1">
+                <Text className="mt-1 text-[12px] leading-[19px] text-[#8491A5]">
                   Use these chord shapes with a capo to play in the target key.
                 </Text>
               </View>
-
             </View>
 
+            {/* GUITAR OPTIONS */}
+
             {guitarOptions.length > 0 ? (
-
-              <View className="mt-5 gap-3">
-
+              <View className="mt-5 gap-2.5">
                 {guitarOptions.map((option) => (
-
                   <View
                     key={`${option.shapeKey}-${option.fret}`}
-                    className="flex-row items-center justify-between rounded-2xl border border-[#51402A] bg-[#292117] px-4 py-4"
+                    className="flex-row items-center justify-between rounded-2xl border border-[#3C3424] bg-[#202019] px-4 py-4"
                   >
-
                     <View>
-                      <Text className="text-white text-[17px] font-extrabold">
+                      <Text className="text-[19px] font-extrabold text-white">
                         {option.shapeKey}
                       </Text>
 
-                      <Text className="text-[#8491A5] text-[12px] mt-1">
+                      <Text className="mt-1 text-[11px] text-[#8491A5]">
                         Chord shape
                       </Text>
                     </View>
 
                     <View className="items-end">
-                      <Text className="text-[#F59E0B] text-[16px] font-bold">
+                      <Text className="text-[15px] font-extrabold text-[#FBBF24]">
                         Capo {option.fret}
                         {getOrdinalSuffix?.(option.fret) ?? ""}
                       </Text>
 
-                      <Text className="text-[#8491A5] text-[12px] mt-1">
-                        Fret
+                      <Text className="mt-1 text-[11px] text-[#8491A5]">
+                        Fret position
                       </Text>
                     </View>
-
                   </View>
-
                 ))}
-
               </View>
-
             ) : (
-
-              <Text className="text-[#8491A5] text-[13px] mt-4">
+              <Text className="mt-4 text-[12px] text-[#8491A5]">
                 Guitar capo options unavailable.
               </Text>
-
             )}
-
           </View>
-
         </View>
 
         {/* RELATIVE CHORDS */}
 
         <View className="mt-8">
-
           <View className="mb-5">
             <Text className="text-[22px] font-extrabold tracking-tight text-white">
               Relative Chords
             </Text>
 
-            <Text className="text-[13px] text-[#8491A5] mt-1">
+            <Text className="mt-1.5 text-[13px] leading-5 text-[#8491A5]">
               Compare chord progressions across keys.
             </Text>
           </View>
 
           <View className="flex-row gap-3">
-
             <RelativeChords
               title={`Key of ${originalKey ?? "N/A"}`}
               subtitle="Original"
@@ -278,9 +283,7 @@ export const OutcomeContent = ({
               forwardSemitones={forwardSemitones}
               reverseSemitones={reverseSemitones}
             />
-
           </View>
-
         </View>
 
       </View>
