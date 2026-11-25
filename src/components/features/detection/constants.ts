@@ -1,6 +1,6 @@
 import type { ChordQuality } from "./types";
 
-export const LISTENING_TIME = 10000;
+export const LISTENING_TIME = 15000;
 
 export const REQUESTED_SAMPLE_RATE = 44100;
 
