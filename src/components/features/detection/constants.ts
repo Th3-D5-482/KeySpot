@@ -4,9 +4,9 @@ export const LISTENING_TIME = 15000;
 
 export const REQUESTED_SAMPLE_RATE = 44100;
 
-export const FFT_SIZE = 4096;
+export const FFT_SIZE = 16384;
 
-export const HOP_SIZE = 2048;
+export const HOP_SIZE = 4096;
 
 export const CHORD_WINDOW_SECONDS = 0.65;
 

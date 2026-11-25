@@ -9,8 +9,12 @@ import {
 } from "./constants";
 import type { ChordObservation, ChordQuality, MusicalMode } from "./types";
 
-const formatChordLabel = (root: number, quality: ChordQuality) => {
-  const suffix = quality === "minor" ? "m" : "";
+const formatChordLabel = (
+  root: number,
+  quality: ChordQuality | "diminished"
+) => {
+  const suffix =
+    quality === "minor" ? "m" : quality === "diminished" ? "dim" : "";
 
   return NOTE_NAMES[root]
     .split(" / ")
@@ -43,21 +47,20 @@ export const getDiatonicChords = (key: number, mode: MusicalMode) => {
     });
   }
 
-  const relativeMajorKey = (key + 3) % 12;
-  const intervals = [0, 2, 4, 5, 7, 9, 11];
-  const qualities: ChordQuality[] = [
+  const intervals = [0, 2, 3, 5, 7, 8, 10];
+  const qualities: (ChordQuality | "diminished")[] = [
+    "minor",
+    "diminished",
     "major",
     "minor",
     "minor",
     "major",
-    "major",
-    "minor",
     "major",
   ];
-  const romans = ["I", "ii", "iii", "IV", "V", "vi", "vii"];
+  const romans = ["i", "ii°", "III", "iv", "v", "VI", "VII"];
 
   return intervals.map((interval, index) => {
-    const root = (relativeMajorKey + interval) % 12;
+    const root = (key + interval) % 12;
     const quality = qualities[index];
 
     return {
