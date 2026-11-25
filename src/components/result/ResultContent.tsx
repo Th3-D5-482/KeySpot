@@ -152,111 +152,76 @@ export const ResultContent = ({
         {/* DIATONIC CHORDS */}
 
         <View className="mt-8">
-
-          {/* SECTION HEADER */}
-
           <View className="flex-row items-center">
-
             <View className="w-10 h-10 items-center justify-center rounded-xl border border-[#252D3A] bg-[#151922]">
-
               <Ionicons
                 name="musical-notes-outline"
                 size={19}
                 color="#34D399"
               />
-
             </View>
 
             <View className="ml-3">
-
               <Text className="text-[#F8FAFC] text-[16px] font-bold">
-                Chords in this key
+                Relative Chords
               </Text>
-
               <Text className="text-[#8491A5] text-[11px] mt-1">
                 The diatonic chord family
               </Text>
-
             </View>
-
           </View>
 
-          {/* CHORD GRID */}
-
           <View className="flex-row flex-wrap mt-4">
-
             {diatonicChords.map((item, index) => (
               <View
                 key={`${item.degree}-${item.chord}-${index}`}
                 className="w-[31%] min-h-[78px] items-center justify-center rounded-2xl border border-[#252D3A] bg-[#151922] mr-[2.3%] mb-2.5"
               >
-
                 <Text className="text-[#8491A5] text-[10px] font-semibold tracking-wider">
                   {item.degree}
                 </Text>
-
                 <Text className="text-[#F8FAFC] text-[20px] font-extrabold mt-1">
                   {item.chord}
                 </Text>
-
               </View>
             ))}
-
           </View>
-
         </View>
 
         {/* DETECTED CHORDS */}
 
         <View className="mt-6">
-
-          {/* SECTION HEADER */}
-
           <View className="flex-row items-center">
-
             <View className="w-10 h-10 items-center justify-center rounded-xl border border-[#3C3424] bg-[#242019]">
-
               <Ionicons
                 name="ear-outline"
                 size={19}
                 color="#FBBF24"
               />
-
             </View>
 
             <View className="ml-3">
-
               <Text className="text-[#F8FAFC] text-[16px] font-bold">
                 Chords heard
               </Text>
-
               <Text className="text-[#8491A5] text-[11px] mt-1">
                 Identified in your recording
               </Text>
-
             </View>
-
           </View>
 
-          {/* DETECTED CHORD LIST */}
-
           <View className="flex-row flex-wrap mt-4">
-
             {detectedChords.map((chord, index) => (
               <View
                 key={`${chord}-${index}`}
                 className="items-center justify-center rounded-xl border border-[#3C3424] bg-[#242019] px-4 py-3 mr-2.5 mb-2.5"
               >
-
                 <Text className="text-[#FBBF24] text-[14px] font-bold">
                   {chord}
                 </Text>
-
               </View>
             ))}
-
           </View>
-
         </View>
 
         {/* DETECT ANOTHER SONG */}

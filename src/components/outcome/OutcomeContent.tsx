@@ -329,7 +329,6 @@ export const OutcomeContent = ({
             <Text className="text-[22px] font-extrabold tracking-tight text-white">
               Relative Chords
             </Text>
-
             <Text className="mt-1.5 text-[13px] leading-5 text-[#8491A5]">
               {selectedGuitarOption
                 ? `Compare ${selectedGuitarOption.shapeKey} chord shapes with the target key.`
@@ -343,7 +342,6 @@ export const OutcomeContent = ({
               subtitle={selectedGuitarOption ? "Guitar Shape" : "Original"}
               rootKey={selectedGuitarOption?.shapeKey ?? originalKey ?? ""}
             />
-
             <RelativeChords
               title={`Key of ${targetKey ?? "N/A"}`}
               subtitle={capoLabel ? `Target · ${capoLabel}` : "Target"}

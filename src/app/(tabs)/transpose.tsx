@@ -50,15 +50,7 @@ export default function Transpose() {
       progression,
       diatonic,
     }),
-    [
-      detectedKey,
-      mode,
-      confidence,
-      alternative,
-      chords,
-      progression,
-      diatonic,
-    ]
+    [detectedKey, mode, confidence, alternative, chords, progression, diatonic]
   );
 
   useFocusEffect(

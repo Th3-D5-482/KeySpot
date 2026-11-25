@@ -38,11 +38,9 @@ export const getDiatonicChords = (key: number, mode: MusicalMode) => {
 
     return intervals.map((interval, index) => {
       const root = (key + interval) % 12;
-      const quality = qualities[index];
-
       return {
         degree: romans[index],
-        label: formatChordLabel(root, quality),
+        label: formatChordLabel(root, qualities[index]),
       };
     });
   }
@@ -61,11 +59,9 @@ export const getDiatonicChords = (key: number, mode: MusicalMode) => {
 
   return intervals.map((interval, index) => {
     const root = (key + interval) % 12;
-    const quality = qualities[index];
-
     return {
       degree: romans[index],
-      label: formatChordLabel(root, quality),
+      label: formatChordLabel(root, qualities[index]),
     };
   });
 };
@@ -107,7 +103,7 @@ const getChordFit = (
       return {
         score: 1.1,
         degree,
-        exact: false,
+        exact: true,
       };
     }
 
@@ -263,12 +259,22 @@ const scoreKeyCandidate = (
       continue;
     }
 
-    if (previous.root === (key + 7) % 12 && current.root === key) {
-      cadenceScore += transitionWeight * 2;
+    const tonicQuality = mode === "Major" ? "major" : "minor";
+
+    if (
+      previous.root === (key + 7) % 12 &&
+      current.root === key &&
+      current.quality === tonicQuality
+    ) {
+      cadenceScore += transitionWeight * (previous.quality === "major" ? 2 : 1);
       cadenceOpportunities += transitionWeight;
     }
 
-    if (previous.root === (key + 5) % 12 && current.root === key) {
+    if (
+      previous.root === (key + 5) % 12 &&
+      current.root === key &&
+      current.quality === tonicQuality
+    ) {
       cadenceScore += transitionWeight;
       cadenceOpportunities += transitionWeight;
     }
@@ -346,15 +352,17 @@ export const detectKey = (
   const second = candidates[1];
   const margin = Math.max(0, best.score - second.score);
   const confidence = Math.min(99, Math.max(1, 50 + margin * 220));
+  const majorKeyIndex = (key: number, mode: MusicalMode) =>
+    mode === "Minor" ? (key + 3) % NOTE_NAMES.length : key;
 
   return {
-    key: NOTE_NAMES[best.key],
-    mode: best.mode,
+    key: NOTE_NAMES[majorKeyIndex(best.key, best.mode)],
+    mode: "Major" as const,
     score: best.score,
     confidence,
     alternative: {
-      key: NOTE_NAMES[second.key],
-      mode: second.mode,
+      key: NOTE_NAMES[majorKeyIndex(second.key, second.mode)],
+      mode: "Major" as const,
       score: second.score,
     },
   };

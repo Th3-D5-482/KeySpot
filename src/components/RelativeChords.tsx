@@ -1,4 +1,3 @@
-
 import { Text, View } from "react-native";
 
 import { NOTE_NAMES } from "./features/detection/constants";
@@ -18,7 +17,6 @@ export const RelativeChords = ({
   rootKey,
 }: RelativeChordsProps) => {
   const keyIndex = NOTE_NAMES.indexOf(rootKey);
-
   const chords =
     keyIndex === -1
       ? []
@@ -26,9 +24,6 @@ export const RelativeChords = ({
 
   return (
     <View className="flex-1 rounded-[22px] border border-[#252D3A] bg-[#151922] px-3 py-4">
-
-      {/* CARD HEADER */}
-
       <View className="mb-4">
         <Text
           className="text-[14px] font-extrabold tracking-tight text-white"
@@ -36,7 +31,6 @@ export const RelativeChords = ({
         >
           {title}
         </Text>
-
         <View className="mt-2 self-start rounded-md border border-[#285B4B] bg-[#14251F] px-2 py-1">
           <Text className="text-[9px] font-extrabold uppercase tracking-[1.5px] text-[#34D399]">
             {subtitle}
@@ -44,11 +38,7 @@ export const RelativeChords = ({
         </View>
       </View>
 
-      {/* DIVIDER */}
-
       <View className="mb-3 h-px bg-[#252D3A]" />
-
-      {/* CHORD LIST */}
 
       <View className="gap-2">
         {chords.map((item) => (
@@ -61,7 +51,6 @@ export const RelativeChords = ({
                 {item.degree}
               </Text>
             </View>
-
             <Text
               className="flex-1 text-center text-[15px] font-extrabold text-white"
               numberOfLines={1}

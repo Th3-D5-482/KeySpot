@@ -42,9 +42,6 @@ export default function Outcome() {
           mode: params.mode,
           confidence: params.confidence,
           alternative: params.alternative,
-          chords: params.chords,
-          progression: params.progression,
-          diatonic: params.diatonic,
         },
       });
     } else {
@@ -54,12 +51,9 @@ export default function Outcome() {
     router,
     returnTo,
     params.alternative,
-    params.chords,
     params.confidence,
     params.detectedKey,
-    params.diatonic,
     params.mode,
-    params.progression,
   ]);
 
   useFocusEffect(

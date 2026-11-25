@@ -62,7 +62,7 @@ export const MINOR_QUALITIES: ChordQuality[] = [
   "minor",
   "major",
   "minor",
-  "major",
+  "minor",
   "major",
   "major",
 ];
