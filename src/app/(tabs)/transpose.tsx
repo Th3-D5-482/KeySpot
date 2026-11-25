@@ -16,6 +16,7 @@ export default function Transpose() {
   const isFocused = useIsFocused();
 
   const {
+    originalKey: originalKeyParam,
     returnTo,
     detectedKey,
     mode,
@@ -26,7 +27,15 @@ export default function Transpose() {
     diatonic,
   } = useLocalSearchParams();
 
-  const [originalKey, setOriginalKey] = useState("C");
+  const routeOriginalKey = Array.isArray(originalKeyParam)
+    ? originalKeyParam[0]
+    : originalKeyParam;
+  const initialOriginalKey =
+    routeOriginalKey && NOTE_NAMES.includes(routeOriginalKey)
+      ? routeOriginalKey
+      : "C";
+
+  const [originalKey, setOriginalKey] = useState(initialOriginalKey);
   const [targetKey, setTargetKey] = useState("A");
 
   const showBackButton = isFocused && returnTo === "result";

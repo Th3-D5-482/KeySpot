@@ -1,3 +1,4 @@
+import { NOTE_NAMES } from "./constants";
 import type { AnalysisResult } from "./types";
 
 export const toResultParams = (result: AnalysisResult) => ({
@@ -17,9 +18,19 @@ export const parseResultParams = (params: {
   chords?: string | string[];
   diatonic?: string | string[];
 }) => {
-  const detectedKey =
+  let detectedKey =
     typeof params.detectedKey === "string" ? params.detectedKey : "?";
-  const detectedMode = typeof params.mode === "string" ? params.mode : "?";
+  let detectedMode = typeof params.mode === "string" ? params.mode : "?";
+
+  if (detectedMode === "Minor") {
+    const keyIndex = NOTE_NAMES.indexOf(detectedKey);
+
+    if (keyIndex !== -1) {
+      detectedKey = NOTE_NAMES[(keyIndex + 3) % NOTE_NAMES.length];
+      detectedMode = "Major";
+    }
+  }
+
   const confidenceValue =
     typeof params.confidence === "string" ? params.confidence : "0";
   const detectedChords =

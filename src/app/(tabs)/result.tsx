@@ -28,14 +28,9 @@ export default function Result() {
 
   const handleTranspose = () => {
     router.push({
-      pathname: "/outcome",
+      pathname: "/transpose",
       params: {
-        originalKey:
-          typeof params.detectedKey === "string"
-            ? params.detectedKey
-            : Array.isArray(params.detectedKey)
-              ? params.detectedKey[0]
-              : "C",
+        originalKey: detectedKey === "?" ? "C" : detectedKey,
         targetKey: "A",
         returnTo: "result",
         detectedKey: params.detectedKey,
