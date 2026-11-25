@@ -31,10 +31,15 @@ export const OutcomeContent = ({
 }: OutcomeContentProps) => {
   const [selectedGuitarOption, setSelectedGuitarOption] =
     useState<GuitarOption | null>(null);
+  const [areGuitarOptionsExpanded, setAreGuitarOptionsExpanded] =
+    useState(false);
   const forwardSemitones = getSemitones?.(originalKey, targetKey) ?? null;
   const reverseSemitones = getSemitones?.(targetKey, originalKey) ?? null;
 
   const guitarOptions = getGuitarOptions?.(targetKey) ?? [];
+  const visibleGuitarOptions = areGuitarOptionsExpanded
+    ? guitarOptions
+    : guitarOptions.slice(0, 3);
   const capoLabel = selectedGuitarOption
     ? `Capo ${selectedGuitarOption.fret}${getOrdinalSuffix?.(selectedGuitarOption.fret) ?? ""}`
     : undefined;
@@ -226,7 +231,7 @@ export const OutcomeContent = ({
 
             {guitarOptions.length > 0 ? (
               <View className="mt-5 gap-2.5">
-                {guitarOptions.map((option) => {
+                {visibleGuitarOptions.map((option) => {
                   const isSelected =
                     selectedGuitarOption?.fret === option.fret &&
                     selectedGuitarOption.shapeKey === option.shapeKey;
@@ -278,6 +283,36 @@ export const OutcomeContent = ({
                     </Pressable>
                   );
                 })}
+
+                {guitarOptions.length > 3 && (
+                  <Pressable
+                    onPress={() =>
+                      setAreGuitarOptionsExpanded((isExpanded) => !isExpanded)
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      areGuitarOptionsExpanded
+                        ? "Show fewer capo options"
+                        : `Show ${guitarOptions.length - 3} more capo options`
+                    }
+                    accessibilityState={{ expanded: areGuitarOptionsExpanded }}
+                    className="flex-row items-center justify-center gap-2 rounded-2xl border border-[#252D3A] bg-[#202632] px-4 py-3"
+                  >
+                    <Text className="text-[13px] font-bold text-[#A3AEC0]">
+                      {areGuitarOptionsExpanded
+                        ? "Show fewer options"
+                        : `Show ${guitarOptions.length - 3} more options`}
+                    </Text>
+
+                    <MaterialCommunityIcons
+                      name={
+                        areGuitarOptionsExpanded ? "chevron-up" : "chevron-down"
+                      }
+                      size={18}
+                      color="#A3AEC0"
+                    />
+                  </Pressable>
+                )}
               </View>
             ) : (
               <Text className="mt-4 text-[12px] text-[#8491A5]">
