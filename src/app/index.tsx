@@ -12,7 +12,7 @@ export default function Index() {
     if (pathname !== "/") return;
 
     const timer = setTimeout(() => {
-      router.replace("/home");
+      router.replace("/routey");
     }, 3000);
 
     return () => {
