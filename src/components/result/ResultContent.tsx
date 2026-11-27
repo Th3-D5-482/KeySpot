@@ -21,7 +21,7 @@ type ResultContentProps = {
   diatonicChords: DiatonicChord[];
   detectedChords: string[];
   onDetectAnother: () => void;
-  onTranpose: () => void;
+  onRoutey: () => void;
   onBack: () => void;
 };
 
@@ -32,7 +32,7 @@ export const ResultContent = ({
   diatonicChords,
   detectedChords,
   onDetectAnother,
-  onTranpose,
+  onRoutey,
   onBack,
 }: ResultContentProps) => {
   return (
@@ -114,7 +114,7 @@ export const ResultContent = ({
 
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={onTranpose}
+          onPress={onRoutey}
           accessibilityRole="button"
           className="flex-row items-center rounded-[20px] border border-[#285B4B] bg-[#14251F] mt-4 px-4 py-4"
         >

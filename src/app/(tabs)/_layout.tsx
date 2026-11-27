@@ -100,6 +100,12 @@ export default function TabsLayout() {
           display: "none"
         }
       }} />
+
+      <Tabs.Screen name ="routey" options ={{
+        tabBarItemStyle: {
+          display: "none"
+        }
+      }} />
     </Tabs>
   );
 }

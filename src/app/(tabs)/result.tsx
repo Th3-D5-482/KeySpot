@@ -26,23 +26,9 @@ export default function Result() {
     router.replace("/home");
   };
 
-  const handleTranspose = () => {
-    router.push({
-      pathname: "/transpose",
-      params: {
-        originalKey: detectedKey === "?" ? "C" : detectedKey,
-        targetKey: "A",
-        returnTo: "result",
-        detectedKey: params.detectedKey,
-        mode: params.mode,
-        confidence: params.confidence,
-        alternative: params.alternative,
-        chords: params.chords,
-        progression: params.progression,
-        diatonic: params.diatonic,
-      },
-    });
-  };
+  const handleRoutey = () => {
+    router.push("/(tabs)/routey");
+  }
 
   return (
     <Screen>
@@ -53,7 +39,7 @@ export default function Result() {
         diatonicChords={diatonicChords}
         detectedChords={detectedChords}
         onDetectAnother={handleDetectAnother}
-        onTranpose={handleTranspose}
+        onRoutey={handleRoutey}
         onBack={backFunction}
       />
     </Screen>
